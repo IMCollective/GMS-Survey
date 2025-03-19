@@ -11,7 +11,7 @@ const fullSurveyData = {
       "When I hear that thousands of people are starving in another country, I feel very frustrated.",
       "People can learn something of value from all different cultures.",
       "Generally, an individual's actions are too small to have a significant effect on the ecosystem.",
-      "People should pursue the standard of living they can afford, even if it only has a slight negative impact on the environment.",
+      "People should be permitted to pursue the standard of living they can afford, if it only has a slight negative impact on the environment.",
       "I think of myself not only as a citizen of my country but also as a citizen of the world.",
       "When I see the conditions some people in the world live under, I feel a responsibility to do something about it.",
       "I enjoy trying to understand people's behavior in the context of their culture.",
