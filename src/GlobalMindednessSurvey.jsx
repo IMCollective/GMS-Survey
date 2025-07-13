@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { jsPDF } from "jspdf";
+import logo from "./logo";
 
 const fullSurveyData = {
     questions: {
@@ -276,7 +278,7 @@ const uiText = {
       }
     };
   
-    const calculateResults = (finalResponses) => {
+  const calculateResults = (finalResponses) => {
       const adjustedResponses = finalResponses.map((value, index) =>
         fullSurveyData.reverse_scoring.includes(index + 1) ? 6 - value : value
       );
@@ -302,6 +304,51 @@ const uiText = {
       const interpretation = uiText[language].interpretations[interpretationKey];
   
       setResults({ overallScore, overallMax, interpretation, categoryScores });
+    };
+
+    const downloadPDF = () => {
+      if (!results) return;
+      const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const margin = 20;
+
+      doc.addImage(logo, 'PNG', margin, 10, 30, 30);
+      doc.setFontSize(22);
+      doc.text(uiText[language].surveyTitle, pageWidth / 2, 20, { align: 'center' });
+      doc.setLineWidth(0.5);
+      doc.line(margin, 35, pageWidth - margin, 35);
+
+      doc.setFontSize(12);
+      doc.text('Below are your Global Mindedness results.', margin, 45);
+
+      doc.setFontSize(14);
+      doc.text(uiText[language].yourResults, margin, 60);
+      doc.text(
+        `${uiText[language].overallScore}: ${results.overallScore} / ${results.overallMax}`,
+        margin,
+        70
+      );
+      doc.setTextColor(0, 102, 204);
+      doc.text(results.interpretation, margin, 80);
+      doc.setTextColor(0, 0, 0);
+      doc.line(margin, 85, pageWidth - margin, 85);
+
+      doc.setFontSize(14);
+      doc.text(uiText[language].categoryScores, margin, 95);
+      let y = 105;
+      Object.entries(results.categoryScores)
+        .filter(([key]) => !key.includes('Max'))
+        .forEach(([category, score]) => {
+          const max = results.categoryScores[`${category}Max`];
+          doc.text(
+            `${fullSurveyData.categoryLabels[language][category]}: ${score} / ${max}`,
+            margin,
+            y
+          );
+          y += 8;
+        });
+
+      doc.save('GlobalMindednessResults.pdf');
     };
   
     return (
@@ -358,7 +405,14 @@ const uiText = {
                 })}
               </ul>
             </div>
-  
+
+            <button
+              className="mt-10 w-full bg-green-600 hover:bg-green-700 text-white text-xl py-3 rounded-2xl shadow-lg"
+              onClick={downloadPDF}
+            >
+              Download PDF
+            </button>
+
             <button
               className="mt-10 w-full bg-blue-600 hover:bg-blue-700 text-white text-xl py-3 rounded-2xl shadow-lg"
               onClick={() => {
