@@ -1,2 +1,2 @@
 
-export { logo as GMSLogo };
+export const GMSLogo = logo;
