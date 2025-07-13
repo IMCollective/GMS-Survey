@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { jsPDF } from "jspdf";
+import { GMSLogo } from "./LandingPage";
 
 const fullSurveyData = {
     questions: {
@@ -194,9 +196,20 @@ const fullSurveyData = {
       en: ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"],
       zh: ["非常不同意", "不同意", "中立", "同意", "非常同意"],
       fr: ["Tout à fait en désaccord", "En désaccord", "Neutre", "D'accord", "Tout à fait d'accord"],
-      es: ["Totalmente en desacuerdo", "En desacuerdo", "Neutral", "De acuerdo", "Totalmente de acuerdo"],
-    },
-  };
+  es: ["Totalmente en desacuerdo", "En desacuerdo", "Neutral", "De acuerdo", "Totalmente de acuerdo"],
+  },
+};
+
+const dimensionDetails = {
+  Responsibility:
+    "This facet captures a person's felt moral obligation toward people and problems beyond their own borders. Someone who scores high here experiences a deep personal concern for global inequities and believes they ought to help relieve them, whether that means supporting human-rights campaigns, adjusting lifestyle choices to cut carbon, or advocating for fairer trade.",
+  CulturalPluralism:
+    "Global-minded individuals also prize diversity as an authentic good. The pluralism sub-scale gauges curiosity about unfamiliar customs, comfort with ambiguity, and the conviction that every culture contributes something of value to the world. Rather than merely tolerating difference, it frames intercultural contact as a source of learning and mutual enrichment.",
+  Efficacy:
+    "Feeling responsible is only half the story; this dimension measures confidence that one's actions can matter. It taps an internalised sense of agency—belief that writing to a legislator, mentoring a refugee, or changing consumption habits will, in aggregate, shift outcomes. High-efficacy respondents typically translate global concern into concrete initiatives because they assume their efforts are consequential.",
+  Interconnectedness:
+    "Finally, the scale explores how strongly a person perceives humanity's web of social, economic and ecological linkages. High scores reflect an appreciation for and awareness of the way in which all people from all nations are connected, from supply chains and digital media to shared climate systems and pandemics. This worldview encourages thinking in terms of ripple effects and mutual dependence rather than isolated national interests.",
+};
 
 const uiText = {
   en: {
@@ -204,6 +217,7 @@ const uiText = {
     yourResults: "Your Results",
     overallScore: "Overall Score",
     categoryScores: "Category Scores:",
+    downloadPdf: "Download PDF",
     takeSurveyAgain: "Take Survey Again",
     question: "Question",
     of: "of",
@@ -218,6 +232,7 @@ const uiText = {
     yourResults: "你的结果",
     overallScore: "总分",
     categoryScores: "分类得分：",
+    downloadPdf: "下载PDF",
     takeSurveyAgain: "再次参与调查",
     question: "问题",
     of: "/",
@@ -232,6 +247,7 @@ const uiText = {
     yourResults: "Vos résultats",
     overallScore: "Score total",
     categoryScores: "Scores par catégorie :",
+    downloadPdf: "Télécharger le PDF",
     takeSurveyAgain: "Reprendre le sondage",
     question: "Question",
     of: "sur",
@@ -246,6 +262,7 @@ const uiText = {
     yourResults: "Tus resultados",
     overallScore: "Puntuación total",
     categoryScores: "Puntuaciones por categoría:",
+    downloadPdf: "Descargar PDF",
     takeSurveyAgain: "Realizar la encuesta de nuevo",
     question: "Pregunta",
     of: "de",
@@ -303,6 +320,28 @@ const uiText = {
   
       setResults({ overallScore, overallMax, interpretation, categoryScores });
     };
+
+    const generatePDF = () => {
+      if (!results) return;
+      const doc = new jsPDF();
+      doc.addImage(GMSLogo, 'PNG', 10, 10, 30, 30);
+      doc.setFontSize(18);
+      doc.text('Global Mindedness Survey Results', 50, 20);
+      doc.setFontSize(12);
+      doc.text(`Overall Score: ${results.overallScore} / ${results.overallMax} (${results.interpretation})`, 10, 50);
+      let y = 60;
+      Object.entries(results.categoryScores)
+        .filter(([key]) => !key.includes('Max'))
+        .forEach(([category, score]) => {
+          const max = results.categoryScores[`${category}Max`];
+          doc.text(`${fullSurveyData.categoryLabels.en[category]}: ${score} / ${max}`, 10, y);
+          y += 6;
+          const lines = doc.splitTextToSize(dimensionDetails[category], 180);
+          doc.text(lines, 10, y);
+          y += lines.length * 6 + 4;
+        });
+      doc.save('GMS-Results.pdf');
+    };
   
     return (
       <div className="p-6 max-w-2xl mx-auto bg-white rounded-2xl shadow-xl mt-10 border border-gray-200">
@@ -358,7 +397,14 @@ const uiText = {
                 })}
               </ul>
             </div>
-  
+
+            <button
+              className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white text-xl py-3 rounded-2xl shadow-lg"
+              onClick={generatePDF}
+            >
+              {uiText[language].downloadPdf}
+            </button>
+
             <button
               className="mt-10 w-full bg-blue-600 hover:bg-blue-700 text-white text-xl py-3 rounded-2xl shadow-lg"
               onClick={() => {
