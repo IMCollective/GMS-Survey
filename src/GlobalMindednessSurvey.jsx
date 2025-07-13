@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { jsPDF } from "jspdf";
 
 const fullSurveyData = {
     questions: {
@@ -205,6 +206,9 @@ const uiText = {
     overallScore: "Overall Score",
     categoryScores: "Category Scores:",
     takeSurveyAgain: "Take Survey Again",
+    shareResults: "Share Results",
+    downloadPDF: "Download PDF",
+    copiedLink: "Link copied to clipboard",
     question: "Question",
     of: "of",
     interpretations: {
@@ -219,6 +223,9 @@ const uiText = {
     overallScore: "总分",
     categoryScores: "分类得分：",
     takeSurveyAgain: "再次参与调查",
+    shareResults: "分享结果",
+    downloadPDF: "下载 PDF",
+    copiedLink: "链接已复制到剪贴板",
     question: "问题",
     of: "/",
     interpretations: {
@@ -233,6 +240,9 @@ const uiText = {
     overallScore: "Score total",
     categoryScores: "Scores par catégorie :",
     takeSurveyAgain: "Reprendre le sondage",
+    shareResults: "Partager les résultats",
+    downloadPDF: "Télécharger en PDF",
+    copiedLink: "Lien copié dans le presse-papiers",
     question: "Question",
     of: "sur",
     interpretations: {
@@ -247,6 +257,9 @@ const uiText = {
     overallScore: "Puntuación total",
     categoryScores: "Puntuaciones por categoría:",
     takeSurveyAgain: "Realizar la encuesta de nuevo",
+    shareResults: "Compartir resultados",
+    downloadPDF: "Descargar en PDF",
+    copiedLink: "Enlace copiado al portapapeles",
     question: "Pregunta",
     of: "de",
     interpretations: {
@@ -262,7 +275,52 @@ const uiText = {
     const questionCount = fullSurveyData.questions.en.length;
     const [responses, setResponses] = useState(Array(questionCount).fill(null));
     const [currentQuestion, setCurrentQuestion] = useState(0);
-    const [results, setResults] = useState(null);
+  const [results, setResults] = useState(null);
+
+  const shareResults = () => {
+    if (!results) return;
+    const text = `${uiText[language].overallScore}: ${results.overallScore} / ${results.overallMax} - ${results.interpretation}`;
+    const shareData = {
+      title: uiText[language].surveyTitle,
+      text,
+      url: window.location.href,
+    };
+    if (navigator.share) {
+      navigator.share(shareData).catch(() => {});
+    } else if (navigator.clipboard) {
+      navigator.clipboard
+        .writeText(`${shareData.title}\n${text}\n${shareData.url}`)
+        .then(() => alert(uiText[language].copiedLink))
+        .catch(() => alert(uiText[language].copiedLink));
+    }
+  };
+
+  const downloadPDF = () => {
+    if (!results) return;
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text(uiText[language].surveyTitle, 10, 10);
+    doc.setFontSize(12);
+    doc.text(
+      `${uiText[language].overallScore}: ${results.overallScore} / ${results.overallMax}`,
+      10,
+      20
+    );
+    doc.text(results.interpretation, 10, 30);
+    let y = 40;
+    Object.entries(results.categoryScores)
+      .filter(([key]) => !key.includes('Max'))
+      .forEach(([category, score]) => {
+        const max = results.categoryScores[`${category}Max`];
+        doc.text(
+          `${fullSurveyData.categoryLabels[language][category]}: ${score} / ${max}`,
+          10,
+          y
+        );
+        y += 10;
+      });
+    doc.save('results.pdf');
+  };
   
     const handleAnswer = (value) => {
       const updated = [...responses];
@@ -358,7 +416,22 @@ const uiText = {
                 })}
               </ul>
             </div>
-  
+
+            <div className="mt-8 flex flex-col gap-4">
+              <button
+                className="w-full bg-green-600 hover:bg-green-700 text-white text-xl py-3 rounded-2xl shadow-lg"
+                onClick={shareResults}
+              >
+                {uiText[language].shareResults}
+              </button>
+              <button
+                className="w-full bg-purple-600 hover:bg-purple-700 text-white text-xl py-3 rounded-2xl shadow-lg"
+                onClick={downloadPDF}
+              >
+                {uiText[language].downloadPDF}
+              </button>
+            </div>
+
             <button
               className="mt-10 w-full bg-blue-600 hover:bg-blue-700 text-white text-xl py-3 rounded-2xl shadow-lg"
               onClick={() => {
