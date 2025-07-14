@@ -18,6 +18,9 @@ npm start
 
 The app will be available at `http://localhost:3000/`.
 
+On the results page you can export your survey scores as a PDF file using the
+**Download PDF** button.
+
 ## Production Build
 
 Create an optimized production build with:
