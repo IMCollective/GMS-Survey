@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { jsPDF } from "jspdf";
 
 const fullSurveyData = {
     questions: {
@@ -215,7 +216,7 @@ const uiText = {
     yourResults: "Your Results",
     overallScore: "Overall Score",
     categoryScores: "Category Scores:",
-    downloadResults: "Download Results",
+    downloadResults: "Download PDF",
     takeSurveyAgain: "Take Survey Again",
     question: "Question",
     of: "of",
@@ -230,7 +231,7 @@ const uiText = {
     yourResults: "你的结果",
     overallScore: "总分",
     categoryScores: "分类得分：",
-    downloadResults: "下载结果",
+    downloadResults: "下载PDF",
     takeSurveyAgain: "再次参与调查",
     question: "问题",
     of: "/",
@@ -245,7 +246,7 @@ const uiText = {
     yourResults: "Vos résultats",
     overallScore: "Score total",
     categoryScores: "Scores par catégorie :",
-    downloadResults: "Télécharger les résultats",
+    downloadResults: "Télécharger le PDF",
     takeSurveyAgain: "Reprendre le sondage",
     question: "Question",
     of: "sur",
@@ -260,7 +261,7 @@ const uiText = {
     yourResults: "Tus resultados",
     overallScore: "Puntuación total",
     categoryScores: "Puntuaciones por categoría:",
-    downloadResults: "Descargar resultados",
+    downloadResults: "Descargar PDF",
     takeSurveyAgain: "Realizar la encuesta de nuevo",
     question: "Pregunta",
     of: "de",
@@ -278,6 +279,55 @@ const uiText = {
     const [responses, setResponses] = useState(Array(questionCount).fill(null));
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [results, setResults] = useState(null);
+
+    const downloadPdf = () => {
+      if (!results) return;
+      const doc = new jsPDF();
+      doc.setFontSize(18);
+      doc.text(uiText[language].surveyTitle, 105, 20, { align: 'center' });
+
+      doc.setFontSize(14);
+      doc.text(
+        `${uiText[language].overallScore}: ${results.overallScore} / ${results.overallMax}`,
+        14,
+        35
+      );
+      doc.text(`${results.interpretation}`, 14, 43);
+
+      doc.text(uiText[language].categoryScores, 14, 55);
+      let y = 63;
+      Object.entries(results.categoryScores)
+        .filter(([key]) => !key.includes('Max'))
+        .forEach(([category, score]) => {
+          const max = results.categoryScores[`${category}Max`];
+          doc.text(
+            `${fullSurveyData.categoryLabels[language][category]}: ${score} / ${max}`,
+            20,
+            y
+          );
+          y += 8;
+        });
+
+      y += 6;
+      doc.setFontSize(14);
+      doc.text('Dimension Details', 14, y);
+      y += 8;
+      doc.setFontSize(12);
+      Object.entries(dimensionDetails).forEach(([key, text]) => {
+        const lines = doc.splitTextToSize(
+          `${fullSurveyData.categoryLabels.en[key]} - ${text}`,
+          170
+        );
+        if (y + lines.length * 7 > 280) {
+          doc.addPage();
+          y = 20;
+        }
+        doc.text(lines, 20, y);
+        y += lines.length * 7 + 4;
+      });
+
+      doc.save('gms_results.pdf');
+    };
   
     const handleAnswer = (value) => {
       const updated = [...responses];
@@ -388,21 +438,7 @@ const uiText = {
 
             <button
               className="mt-10 w-full bg-green-600 hover:bg-green-700 text-white text-xl py-3 rounded-2xl shadow-lg"
-              onClick={() => {
-                const data = {
-                  overallScore: results.overallScore,
-                  overallMax: results.overallMax,
-                  interpretation: results.interpretation,
-                  categoryScores: results.categoryScores,
-                };
-                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'gms_results.json';
-                a.click();
-                URL.revokeObjectURL(url);
-              }}
+              onClick={downloadPdf}
             >
               {uiText[language].downloadResults}
             </button>
