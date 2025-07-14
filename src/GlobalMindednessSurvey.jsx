@@ -367,6 +367,45 @@ const uiText = {
           drawBar(percentage, [34, 197, 94]);
         });
 
+      // Add detailed facet descriptions on a new page
+      doc.addPage();
+      const facetMargin = 40;
+      let facetY = facetMargin;
+      const facetWidth = doc.internal.pageSize.getWidth() - facetMargin * 2;
+
+      const facets = [
+        {
+          title: 'Responsibility',
+          text:
+            "This facet captures a person\u2019s felt moral obligation toward people and problems beyond their own borders. Someone who scores high here experiences a \u201cdeep personal concern\u201d for global inequities and believes they ought to help relieve them, whether that means supporting human-rights campaigns, adjusting lifestyle choices to cut carbon, or advocating for fairer trade.",
+        },
+        {
+          title: 'Cultural Pluralism',
+          text:
+            'Global-minded individuals also prize diversity as an authentic good. The pluralism sub-scale gauges curiosity about unfamiliar customs, comfort with ambiguity, and the conviction that every culture \u201ccontributes something of value to the world.\u201d Rather than merely tolerating difference, it frames intercultural contact as a source of learning and mutual enrichment.',
+        },
+        {
+          title: 'Efficacy',
+          text:
+            "Feeling responsible is only half the story; this dimension measures confidence that one\u2019s actions can matter. It taps an internalised sense of agency\u2014belief that writing to a legislator, mentoring a refugee, or changing consumption habits will, in aggregate, shift outcomes. High-efficacy respondents typically translate global concern into concrete initiatives because they assume their efforts are consequential.",
+        },
+        {
+          title: 'Interconnectedness',
+          text:
+            'Finally, the scale explores how strongly a person perceives humanity\u2019s web of social, economic and ecological linkages. High scores reflect an \u201cappreciation for and awareness of the way in which all people from all nations are connected,\u201d from supply chains and digital media to shared climate systems and pandemics. This worldview encourages thinking in terms of ripple effects and mutual dependence rather than isolated national interests.',
+        },
+      ];
+
+      facets.forEach(({ title, text }) => {
+        doc.setFontSize(14);
+        doc.text(title, facetMargin, facetY);
+        facetY += 16;
+        doc.setFontSize(12);
+        const lines = doc.splitTextToSize(text, facetWidth);
+        doc.text(lines, facetMargin, facetY);
+        facetY += lines.length * 12 + 20;
+      });
+
       doc.save('results.pdf');
     };
   
