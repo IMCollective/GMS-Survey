@@ -349,12 +349,21 @@ const uiText = {
           const max = results.categoryScores[`${category}Max`];
           const percentage = score / max;
 
+          doc.setFontSize(12);
           doc.text(
             `${fullSurveyData.categoryLabels[language][category]}: ${score} / ${max}`,
             margin,
             y
           );
           y += 12;
+          doc.setFontSize(10);
+          const descLines = doc.splitTextToSize(
+            fullSurveyData.categoryDescriptions[language][category],
+            barWidth
+          );
+          doc.text(descLines, margin, y);
+          y += descLines.length * 10 + 4;
+          doc.setFontSize(12);
           drawBar(percentage, [34, 197, 94]);
         });
 
