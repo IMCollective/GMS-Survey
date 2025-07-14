@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { jsPDF } from "jspdf";
 
 const fullSurveyData = {
     questions: {
@@ -302,6 +303,34 @@ const uiText = {
       const interpretation = uiText[language].interpretations[interpretationKey];
   
       setResults({ overallScore, overallMax, interpretation, categoryScores });
+    };
+
+    const downloadPdf = () => {
+      if (!results) return;
+      const doc = new jsPDF();
+
+      doc.setFontSize(16);
+      doc.text(uiText[language].yourResults, 10, 10);
+      doc.text(
+        `${uiText[language].overallScore}: ${results.overallScore} / ${results.overallMax}`,
+        10,
+        20
+      );
+
+      let y = 30;
+      Object.entries(results.categoryScores)
+        .filter(([key]) => !key.includes("Max"))
+        .forEach(([key, score]) => {
+          const max = results.categoryScores[`${key}Max`];
+          doc.text(
+            `${fullSurveyData.categoryLabels[language][key]}: ${score} / ${max}`,
+            10,
+            y
+          );
+          y += 10;
+        });
+
+      doc.save("survey-results.pdf");
     };
   
     return (
