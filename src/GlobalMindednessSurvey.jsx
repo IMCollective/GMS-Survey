@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { jsPDF } from "jspdf";
 
 const fullSurveyData = {
     questions: {
@@ -204,6 +205,7 @@ const uiText = {
     yourResults: "Your Results",
     overallScore: "Overall Score",
     categoryScores: "Category Scores:",
+    downloadPdf: "Download PDF",
     takeSurveyAgain: "Take Survey Again",
     question: "Question",
     of: "of",
@@ -218,6 +220,7 @@ const uiText = {
     yourResults: "你的结果",
     overallScore: "总分",
     categoryScores: "分类得分：",
+    downloadPdf: "下载 PDF",
     takeSurveyAgain: "再次参与调查",
     question: "问题",
     of: "/",
@@ -232,6 +235,7 @@ const uiText = {
     yourResults: "Vos résultats",
     overallScore: "Score total",
     categoryScores: "Scores par catégorie :",
+    downloadPdf: "Télécharger le PDF",
     takeSurveyAgain: "Reprendre le sondage",
     question: "Question",
     of: "sur",
@@ -246,6 +250,7 @@ const uiText = {
     yourResults: "Tus resultados",
     overallScore: "Puntuación total",
     categoryScores: "Puntuaciones por categoría:",
+    downloadPdf: "Descargar PDF",
     takeSurveyAgain: "Realizar la encuesta de nuevo",
     question: "Pregunta",
     of: "de",
@@ -300,8 +305,60 @@ const uiText = {
           ? 'moderate'
           : 'high';
       const interpretation = uiText[language].interpretations[interpretationKey];
-  
+
       setResults({ overallScore, overallMax, interpretation, categoryScores });
+    };
+
+    const downloadPdf = () => {
+      if (!results) return;
+
+      const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const margin = 40;
+      let y = margin;
+
+      doc.setFontSize(18);
+      doc.text(uiText[language].yourResults, pageWidth / 2, y, { align: 'center' });
+
+      y += 30;
+      doc.setFontSize(12);
+      doc.text(
+        `${uiText[language].overallScore}: ${results.overallScore} / ${results.overallMax} (${results.interpretation})`,
+        margin,
+        y
+      );
+
+      y += 12;
+      const barWidth = pageWidth - margin * 2;
+      const barHeight = 12;
+      const drawBar = (percent, color) => {
+        doc.setFillColor(200, 200, 200);
+        doc.roundedRect(margin + 2, y + 2, barWidth, barHeight, 3, 3, 'F');
+        doc.setFillColor(240, 240, 240);
+        doc.roundedRect(margin, y, barWidth, barHeight, 3, 3, 'F');
+        doc.setFillColor(color[0], color[1], color[2]);
+        doc.roundedRect(margin, y, barWidth * percent, barHeight, 3, 3, 'F');
+        y += barHeight + 20;
+      };
+
+      drawBar(results.overallScore / results.overallMax, [54, 162, 235]);
+
+      Object.entries(results.categoryScores)
+        .filter(([key]) => !key.includes('Max'))
+        .forEach(([category, score]) => {
+          const max = results.categoryScores[`${category}Max`];
+          const percentage = score / max;
+
+          doc.text(
+            `${fullSurveyData.categoryLabels[language][category]}: ${score} / ${max}`,
+            margin,
+            y
+          );
+          y += 12;
+          drawBar(percentage, [34, 197, 94]);
+        });
+
+      doc.save('results.pdf');
     };
   
     return (
@@ -358,7 +415,14 @@ const uiText = {
                 })}
               </ul>
             </div>
-  
+
+            <button
+              className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white text-xl py-3 rounded-2xl shadow-lg"
+              onClick={downloadPdf}
+            >
+              {uiText[language].downloadPdf}
+            </button>
+
             <button
               className="mt-10 w-full bg-blue-600 hover:bg-blue-700 text-white text-xl py-3 rounded-2xl shadow-lg"
               onClick={() => {
