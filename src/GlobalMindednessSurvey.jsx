@@ -312,25 +312,26 @@ const uiText = {
     const downloadPdf = () => {
       if (!results) return;
 
-      const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+      const doc = new jsPDF({ unit: 'pt', format: 'a4', orientation: 'landscape' });
       const pageWidth = doc.internal.pageSize.getWidth();
       const margin = 40;
+      const contentWidth = pageWidth - margin * 2;
       let y = margin;
 
-      doc.setFontSize(18);
+      doc.setFontSize(16);
       doc.text(uiText[language].yourResults, pageWidth / 2, y, { align: 'center' });
 
-      y += 30;
-      doc.setFontSize(12);
+      y += 24;
+      doc.setFontSize(10);
       doc.text(
         `${uiText[language].overallScore}: ${results.overallScore} / ${results.overallMax} (${results.interpretation})`,
         margin,
         y
       );
 
-      y += 12;
-      const barWidth = pageWidth - margin * 2;
-      const barHeight = 12;
+      y += 10;
+      const barWidth = contentWidth;
+      const barHeight = 10;
       const drawBar = (percent, color) => {
         doc.setFillColor(200, 200, 200);
         doc.roundedRect(margin + 2, y + 2, barWidth, barHeight, 3, 3, 'F');
@@ -338,7 +339,7 @@ const uiText = {
         doc.roundedRect(margin, y, barWidth, barHeight, 3, 3, 'F');
         doc.setFillColor(color[0], color[1], color[2]);
         doc.roundedRect(margin, y, barWidth * percent, barHeight, 3, 3, 'F');
-        y += barHeight + 20;
+        y += barHeight + 16;
       };
 
       drawBar(results.overallScore / results.overallMax, [54, 162, 235]);
@@ -349,29 +350,28 @@ const uiText = {
           const max = results.categoryScores[`${category}Max`];
           const percentage = score / max;
 
-          doc.setFontSize(12);
+          doc.setFontSize(11);
           doc.text(
             `${fullSurveyData.categoryLabels[language][category]}: ${score} / ${max}`,
             margin,
             y
           );
-          y += 12;
-          doc.setFontSize(10);
+          y += 11;
+          doc.setFontSize(9);
           const descLines = doc.splitTextToSize(
             fullSurveyData.categoryDescriptions[language][category],
             barWidth
           );
           doc.text(descLines, margin, y);
-          y += descLines.length * 10 + 4;
-          doc.setFontSize(12);
+          y += descLines.length * 9 + 3;
+          doc.setFontSize(11);
           drawBar(percentage, [34, 197, 94]);
         });
 
-      // Add detailed facet descriptions on a new page
-      doc.addPage();
-      const facetMargin = 40;
-      let facetY = facetMargin;
-      const facetWidth = doc.internal.pageSize.getWidth() - facetMargin * 2;
+      // Add detailed facet descriptions below on the same page
+      const facetMargin = margin;
+      let facetY = y;
+      const facetWidth = contentWidth;
 
       const facets = [
         {
@@ -397,14 +397,16 @@ const uiText = {
       ];
 
       facets.forEach(({ title, text }) => {
-        doc.setFontSize(14);
+        doc.setFontSize(11);
         doc.text(title, facetMargin, facetY);
-        facetY += 16;
-        doc.setFontSize(12);
+        facetY += 12;
+        doc.setFontSize(9);
         const lines = doc.splitTextToSize(text, facetWidth);
         doc.text(lines, facetMargin, facetY);
-        facetY += lines.length * 12 + 20;
+        facetY += lines.length * 9 + 12;
       });
+
+      y = facetY;
 
       doc.save('results.pdf');
     };
