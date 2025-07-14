@@ -283,10 +283,13 @@ const uiText = {
     const downloadPdf = () => {
       if (!results) return;
       const doc = new jsPDF();
+      doc.setTextColor(33, 37, 41);
       doc.setFontSize(18);
+      doc.setFont('helvetica', 'bold');
       doc.text(uiText[language].surveyTitle, 105, 20, { align: 'center' });
 
       doc.setFontSize(14);
+      doc.setFont('helvetica', 'normal');
       doc.text(
         `${uiText[language].overallScore}: ${results.overallScore} / ${results.overallMax}`,
         14,
@@ -294,33 +297,54 @@ const uiText = {
       );
       doc.text(`${results.interpretation}`, 14, 43);
 
-      doc.text(uiText[language].categoryScores, 14, 55);
-      let y = 63;
+      const overallPercent = (results.overallScore / results.overallMax) * 100;
+      doc.setFillColor(220, 220, 220);
+      doc.rect(14, 48, 182, 8, 'F');
+      doc.setFillColor(37, 99, 235);
+      doc.rect(14, 48, (182 * overallPercent) / 100, 8, 'F');
+
+      doc.setFont('helvetica', 'bold');
+      doc.text(uiText[language].categoryScores, 14, 65);
+      doc.setFont('helvetica', 'normal');
+      let y = 73;
       Object.entries(results.categoryScores)
         .filter(([key]) => !key.includes('Max'))
         .forEach(([category, score]) => {
           const max = results.categoryScores[`${category}Max`];
+          const percentage = (score / max) * 100;
           doc.text(
             `${fullSurveyData.categoryLabels[language][category]}: ${score} / ${max}`,
             20,
             y
           );
-          y += 8;
+          doc.setFillColor(220, 220, 220);
+          doc.rect(20, y + 4, 170, 6, 'F');
+          doc.setFillColor(16, 185, 129);
+          doc.rect(20, y + 4, (170 * percentage) / 100, 6, 'F');
+          y += 14;
         });
 
-      y += 6;
+      y += 2;
+      doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
       doc.text('Dimension Details', 14, y);
       y += 8;
+      doc.setFont('helvetica', 'normal');
       doc.setFontSize(12);
       Object.entries(dimensionDetails).forEach(([key, text]) => {
-        const lines = doc.splitTextToSize(
-          `${fullSurveyData.categoryLabels.en[key]} - ${text}`,
-          170
-        );
-        if (y + lines.length * 7 > 280) {
+        doc.setFont('helvetica', 'bold');
+        doc.text(fullSurveyData.categoryLabels.en[key], 20, y);
+        doc.setFont('helvetica', 'normal');
+        const lines = doc.splitTextToSize(text, 170);
+        if (y + 6 + lines.length * 7 > 280) {
           doc.addPage();
           y = 20;
+          doc.setFont('helvetica', 'bold');
+          doc.text(fullSurveyData.categoryLabels.en[key], 20, y);
+          doc.setFont('helvetica', 'normal');
+          y += 6;
+        } else {
+          y += 6;
         }
         doc.text(lines, 20, y);
         y += lines.length * 7 + 4;
@@ -424,17 +448,6 @@ const uiText = {
               </ul>
             </div>
 
-            <div className="mt-10">
-              <h3 className="text-xl font-semibold mb-4 text-gray-700">About the Dimensions</h3>
-              <ul className="space-y-4 text-gray-600 text-sm text-left">
-                {Object.entries(dimensionDetails).map(([key, text]) => (
-                  <li key={key}>
-                    <strong>{fullSurveyData.categoryLabels.en[key]} &ndash; </strong>
-                    {text}
-                  </li>
-                ))}
-              </ul>
-            </div>
 
             <button
               className="mt-10 w-full bg-green-600 hover:bg-green-700 text-white text-xl py-3 rounded-2xl shadow-lg"
