@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { jsPDF } from "jspdf";
+import { logo } from "./logo";
 
 const fullSurveyData = {
     questions: {
@@ -317,6 +318,10 @@ const uiText = {
       const margin = 40;
       const contentWidth = pageWidth - margin * 2;
       let y = margin;
+
+      const imgSize = 80;
+      doc.addImage(logo, 'PNG', (pageWidth - imgSize) / 2, y, imgSize, imgSize);
+      y += imgSize + 20;
 
       doc.setFontSize(16);
       doc.text(uiText[language].yourResults, pageWidth / 2, y, { align: 'center' });
