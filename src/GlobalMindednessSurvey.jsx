@@ -209,6 +209,8 @@ const uiText = {
     takeSurveyAgain: "Take Survey Again",
     question: "Question",
     of: "of",
+    nameLabel: "Your Name",
+    namePlaceholder: "Enter your name",
     interpretations: {
       low: "Low global-mindedness",
       moderate: "Moderate global-mindedness",
@@ -224,6 +226,8 @@ const uiText = {
     takeSurveyAgain: "再次参与调查",
     question: "问题",
     of: "/",
+    nameLabel: "你的名字",
+    namePlaceholder: "输入你的名字",
     interpretations: {
       low: "全球意识低",
       moderate: "全球意识中等",
@@ -239,6 +243,8 @@ const uiText = {
     takeSurveyAgain: "Reprendre le sondage",
     question: "Question",
     of: "sur",
+    nameLabel: "Votre nom",
+    namePlaceholder: "Entrez votre nom",
     interpretations: {
       low: "Faible ouverture mondiale",
       moderate: "Ouverture mondiale modérée",
@@ -254,6 +260,8 @@ const uiText = {
     takeSurveyAgain: "Realizar la encuesta de nuevo",
     question: "Pregunta",
     of: "de",
+    nameLabel: "Tu nombre",
+    namePlaceholder: "Ingresa tu nombre",
     interpretations: {
       low: "Baja mentalidad global",
       moderate: "Mentalidad global moderada",
@@ -268,6 +276,7 @@ const uiText = {
     const [responses, setResponses] = useState(Array(questionCount).fill(null));
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [results, setResults] = useState(null);
+    const [participantName, setParticipantName] = useState('');
   
     const handleAnswer = (value) => {
       const updated = [...responses];
@@ -317,6 +326,13 @@ const uiText = {
       const margin = 40;
       const contentWidth = pageWidth - margin * 2;
       let y = margin;
+
+      const trimmedName = participantName.trim();
+      if (trimmedName) {
+        doc.setFontSize(12);
+        doc.text(trimmedName, margin, y);
+        y += 24;
+      }
 
       doc.setFontSize(16);
       doc.text(uiText[language].yourResults, pageWidth / 2, y, { align: 'center' });
@@ -379,7 +395,8 @@ const uiText = {
           drawBar(percentage, [34, 197, 94]);
         });
 
-      doc.save('results.pdf');
+      const safeName = trimmedName ? trimmedName.replace(/\s+/g, '_') : 'GMS_results';
+      doc.save(`${safeName}_GMS_results.pdf`);
     };
   
     return (
@@ -435,6 +452,20 @@ const uiText = {
                   );
                 })}
               </ul>
+            </div>
+
+            <div className="mt-6">
+              <label className="block mb-2 text-gray-700" htmlFor="participant-name">
+                {uiText[language].nameLabel}
+              </label>
+              <input
+                id="participant-name"
+                type="text"
+                value={participantName}
+                onChange={(e) => setParticipantName(e.target.value)}
+                placeholder={uiText[language].namePlaceholder}
+                className="w-full border p-2 rounded"
+              />
             </div>
 
             <button
