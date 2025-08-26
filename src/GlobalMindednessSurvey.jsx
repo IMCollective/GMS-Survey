@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { jsPDF } from "jspdf";
 
 const fullSurveyData = {
@@ -207,6 +207,7 @@ const uiText = {
     categoryScores: "Category Scores:",
     downloadPdf: "Download PDF",
     takeSurveyAgain: "Take Survey Again",
+    resetSurvey: "Reset Survey",
     question: "Question",
     of: "of",
     interpretations: {
@@ -222,6 +223,7 @@ const uiText = {
     categoryScores: "分类得分：",
     downloadPdf: "下载 PDF",
     takeSurveyAgain: "再次参与调查",
+    resetSurvey: "重置调查",
     question: "问题",
     of: "/",
     interpretations: {
@@ -237,6 +239,7 @@ const uiText = {
     categoryScores: "Scores par catégorie :",
     downloadPdf: "Télécharger le PDF",
     takeSurveyAgain: "Reprendre le sondage",
+    resetSurvey: "Réinitialiser l'enquête",
     question: "Question",
     of: "sur",
     interpretations: {
@@ -252,6 +255,7 @@ const uiText = {
     categoryScores: "Puntuaciones por categoría:",
     downloadPdf: "Descargar PDF",
     takeSurveyAgain: "Realizar la encuesta de nuevo",
+    resetSurvey: "Reiniciar encuesta",
     question: "Pregunta",
     of: "de",
     interpretations: {
@@ -263,11 +267,45 @@ const uiText = {
 };
   
   export default function GlobalMindednessSurvey() {
-    const [language, setLanguage] = useState('en');
     const questionCount = fullSurveyData.questions.en.length;
-    const [responses, setResponses] = useState(Array(questionCount).fill(null));
-    const [currentQuestion, setCurrentQuestion] = useState(0);
+
+    const [language, setLanguage] = useState(() =>
+      localStorage.getItem('language') || 'en'
+    );
+
+    const [responses, setResponses] = useState(() => {
+      const saved = localStorage.getItem('responses');
+      return saved ? JSON.parse(saved) : Array(questionCount).fill(null);
+    });
+
+    const [currentQuestion, setCurrentQuestion] = useState(() => {
+      const saved = localStorage.getItem('currentQuestion');
+      return saved ? parseInt(saved, 10) : 0;
+    });
+
     const [results, setResults] = useState(null);
+
+    useEffect(() => {
+      localStorage.setItem('language', language);
+    }, [language]);
+
+    useEffect(() => {
+      localStorage.setItem('responses', JSON.stringify(responses));
+    }, [responses]);
+
+    useEffect(() => {
+      localStorage.setItem('currentQuestion', currentQuestion);
+    }, [currentQuestion]);
+
+    const resetSurvey = () => {
+      localStorage.removeItem('language');
+      localStorage.removeItem('responses');
+      localStorage.removeItem('currentQuestion');
+      setLanguage('en');
+      setResponses(Array(questionCount).fill(null));
+      setCurrentQuestion(0);
+      setResults(null);
+    };
   
     const handleAnswer = (value) => {
       const updated = [...responses];
@@ -398,6 +436,12 @@ const uiText = {
             <option value="fr">Français</option>
             <option value="es">Español</option>
           </select>
+          <button
+            className="ml-4 border p-2 rounded bg-red-500 text-white hover:bg-red-600"
+            onClick={resetSurvey}
+          >
+            {uiText[language].resetSurvey}
+          </button>
         </div>
   
         {results ? (
@@ -446,11 +490,7 @@ const uiText = {
 
             <button
               className="mt-10 w-full bg-blue-600 hover:bg-blue-700 text-white text-xl py-3 rounded-2xl shadow-lg"
-              onClick={() => {
-                setResults(null);
-                setResponses(Array(questionCount).fill(null));
-                setCurrentQuestion(0);
-              }}
+              onClick={resetSurvey}
             >
               {uiText[language].takeSurveyAgain}
             </button>
