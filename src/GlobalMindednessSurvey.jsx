@@ -262,8 +262,7 @@ const uiText = {
   },
 };
   
-  export default function GlobalMindednessSurvey() {
-    const [language, setLanguage] = useState('en');
+  export default function GlobalMindednessSurvey({ language, setLanguage }) {
     const questionCount = fullSurveyData.questions.en.length;
     const [responses, setResponses] = useState(Array(questionCount).fill(null));
     const [currentQuestion, setCurrentQuestion] = useState(0);
