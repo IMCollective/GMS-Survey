@@ -277,6 +277,7 @@ const uiText = {
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [results, setResults] = useState(null);
     const [participantName, setParticipantName] = useState('');
+    const progress = (currentQuestion + 1) / questionCount;
   
     const handleAnswer = (value) => {
       const updated = [...responses];
@@ -492,6 +493,12 @@ const uiText = {
               <p className="mb-6 text-lg font-medium text-gray-700 text-center">
                 {uiText[language].question} {currentQuestion + 1} {uiText[language].of} {questionCount}
               </p>
+              <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
+                <div
+                  className="bg-blue-600 h-2 rounded-full transition-all"
+                  style={{ width: `${progress * 100}%` }}
+                ></div>
+              </div>
               <p className="mb-8 text-xl text-gray-800 text-center">{fullSurveyData.questions[language][currentQuestion]}</p>
               <div className="flex flex-col gap-4">
                 {fullSurveyData.scaleDescriptors[language].map((desc, idx) => (
