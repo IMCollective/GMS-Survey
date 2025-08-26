@@ -312,17 +312,29 @@ const uiText = {
     const downloadPdf = () => {
       if (!results) return;
 
+      const palette = {
+        primary: [37, 99, 235], // Tailwind blue-600
+        accent: [34, 197, 94], // Tailwind green-500
+        neutral: [55, 65, 81], // Tailwind gray-700
+      };
+
       const doc = new jsPDF({ unit: 'pt', format: 'a4', orientation: 'landscape' });
+      doc.setFont('helvetica', 'normal');
+
       const pageWidth = doc.internal.pageSize.getWidth();
       const margin = 40;
       const contentWidth = pageWidth - margin * 2;
       let y = margin;
 
+      doc.setFont('helvetica', 'bold');
       doc.setFontSize(16);
+      doc.setTextColor(...palette.primary);
       doc.text(uiText[language].yourResults, pageWidth / 2, y, { align: 'center' });
 
       y += 24;
+      doc.setFont('helvetica', 'normal');
       doc.setFontSize(10);
+      doc.setTextColor(...palette.neutral);
       doc.text(
         `${uiText[language].overallScore}: ${results.overallScore} / ${results.overallMax} (${results.interpretation})`,
         margin,
@@ -342,7 +354,7 @@ const uiText = {
         y += barHeight + 16;
       };
 
-      drawBar(results.overallScore / results.overallMax, [54, 162, 235]);
+      drawBar(results.overallScore / results.overallMax, palette.primary);
 
       const facetDescriptions = {
         Responsibility:
@@ -361,22 +373,27 @@ const uiText = {
           const max = results.categoryScores[`${category}Max`];
           const percentage = score / max;
 
+          doc.setFont('helvetica', 'bold');
           doc.setFontSize(11);
+          doc.setTextColor(...palette.primary);
           doc.text(
             `${fullSurveyData.categoryLabels[language][category]}: ${score} / ${max}`,
             margin,
             y
           );
           y += 11;
+          doc.setFont('helvetica', 'normal');
           doc.setFontSize(9);
+          doc.setTextColor(...palette.neutral);
           const descLines = doc.splitTextToSize(
             facetDescriptions[category],
             barWidth
           );
           doc.text(descLines, margin, y);
           y += descLines.length * 9 + 3;
+          doc.setFont('helvetica', 'normal');
           doc.setFontSize(11);
-          drawBar(percentage, [34, 197, 94]);
+          drawBar(percentage, palette.accent);
         });
 
       doc.save('results.pdf');
