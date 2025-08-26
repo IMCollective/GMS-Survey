@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { jsPDF } from "jspdf";
+import { logo } from "./LandingPage";
 
 const fullSurveyData = {
     questions: {
@@ -206,6 +207,9 @@ const uiText = {
     overallScore: "Overall Score",
     categoryScores: "Category Scores:",
     downloadPdf: "Download PDF",
+    pdfTitle: "Global Mindedness Survey Results",
+    footerNote: "https://globalmindednesssurvey.org",
+    page: "Page",
     takeSurveyAgain: "Take Survey Again",
     question: "Question",
     of: "of",
@@ -223,6 +227,9 @@ const uiText = {
     overallScore: "总分",
     categoryScores: "分类得分：",
     downloadPdf: "下载 PDF",
+    pdfTitle: "全球意识调查结果",
+    footerNote: "https://globalmindednesssurvey.org",
+    page: "页",
     takeSurveyAgain: "再次参与调查",
     question: "问题",
     of: "/",
@@ -240,6 +247,9 @@ const uiText = {
     overallScore: "Score total",
     categoryScores: "Scores par catégorie :",
     downloadPdf: "Télécharger le PDF",
+    pdfTitle: "Résultats du Sondage sur l'ouverture au monde",
+    footerNote: "https://globalmindednesssurvey.org",
+    page: "Page",
     takeSurveyAgain: "Reprendre le sondage",
     question: "Question",
     of: "sur",
@@ -257,6 +267,9 @@ const uiText = {
     overallScore: "Puntuación total",
     categoryScores: "Puntuaciones por categoría:",
     downloadPdf: "Descargar PDF",
+    pdfTitle: "Resultados de la Encuesta de Mentalidad Global",
+    footerNote: "https://globalmindednesssurvey.org",
+    page: "Página",
     takeSurveyAgain: "Realizar la encuesta de nuevo",
     question: "Pregunta",
     of: "de",
@@ -323,9 +336,16 @@ const uiText = {
 
       const doc = new jsPDF({ unit: 'pt', format: 'a4', orientation: 'landscape' });
       const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
       const margin = 40;
       const contentWidth = pageWidth - margin * 2;
       let y = margin;
+
+      const imgSize = 60;
+      doc.addImage(logo, 'PNG', margin, margin, imgSize, imgSize);
+      doc.setFontSize(18);
+      doc.text(uiText[language].pdfTitle, pageWidth / 2, margin + imgSize / 2, { align: 'center' });
+      y += imgSize + 20;
 
       const trimmedName = participantName.trim();
       if (trimmedName) {
@@ -394,6 +414,20 @@ const uiText = {
           doc.setFontSize(11);
           drawBar(percentage, [34, 197, 94]);
         });
+
+      const pageCount = doc.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFontSize(10);
+        doc.text(
+          `${uiText[language].page} ${i} ${uiText[language].of} ${pageCount}`,
+          margin,
+          pageHeight - 20
+        );
+        doc.text(uiText[language].footerNote, pageWidth - margin, pageHeight - 20, {
+          align: 'right',
+        });
+      }
 
       const safeName = trimmedName ? trimmedName.replace(/\s+/g, '_') : 'GMS_results';
       doc.save(`${safeName}_GMS_results.pdf`);
