@@ -139,7 +139,7 @@ export default function LandingPage({ onStart, language, setLanguage }) {
       <ul className="text-left list-disc list-inside mb-4 text-gray-700">
         {t.dimensions.map((d) => (
           <li key={d.name} className="mb-2">
-            <strong>{d.name}</strong> – {d.desc}
+            <strong>{d.name}</strong> - {d.desc}
           </li>
         ))}
       </ul>
