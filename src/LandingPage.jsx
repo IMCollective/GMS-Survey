@@ -28,7 +28,7 @@ const content = {
     ],
     outro: [
       "The survey is not a test, but a self-reflective tool. It can help you better understand your own mindset and how it relates to global citizenship, intercultural understanding, and social responsibility.",
-      "Take a few minutes to complete the survey and explore your results—you may discover new perspectives on how you connect with the wider world.",
+      "Take a few minutes to complete the survey and explore your results-you may discover new perspectives on how you connect with the wider world.",
     ],
     start: "Start Survey",
   },
@@ -49,7 +49,7 @@ const content = {
     ],
     outro: [
       "该调查不是考试，而是自我反思的工具。它可以帮助你更好地理解自己的思维方式，以及它如何与全球公民意识、跨文化理解和社会责任相关。",
-      "花几分钟完成调查并探索你的结果——你可能会发现自己与更广阔世界相联的新视角。",
+      "花几分钟完成调查并探索你的结果-你可能会发现自己与更广阔世界相联的新视角。",
     ],
     start: "开始调查",
   },
@@ -81,7 +81,7 @@ const content = {
     ],
     outro: [
       "Ce sondage n’est pas un test, mais un outil d’autoréflexion. Il peut vous aider à mieux comprendre votre propre état d’esprit et sa relation avec la citoyenneté mondiale, la compréhension interculturelle et la responsabilité sociale.",
-      "Prenez quelques minutes pour répondre au sondage et explorer vos résultats — vous pourriez découvrir de nouvelles perspectives sur votre façon de vous relier au reste du monde.",
+      "Prenez quelques minutes pour répondre au sondage et explorer vos résultats - vous pourriez découvrir de nouvelles perspectives sur votre façon de vous relier au reste du monde.",
     ],
     start: "Commencer l'enquête",
   },
