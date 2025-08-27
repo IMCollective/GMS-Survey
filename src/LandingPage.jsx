@@ -3,9 +3,9 @@ const content = {
   en: {
     title: "Welcome to the Global Mindedness Survey",
     intro:
-      "This short questionnaire invites you to reflect on your perspectives as a global citizen. Adapted from Hett’s Global Mindedness Scale, the survey is designed to measure how you view the world, your sense of interconnectedness with others, and your openness to cultural diversity.",
+      "This short questionnaire invites you to reflect on your perspectives as a global citizen. Adapted from Hett's Global Mindedness Scale, the survey is designed to measure how you view the world, your sense of interconnectedness with others, and your openness to cultural diversity.",
     body:
-      "By completing the survey, you’ll gain insights into your attitudes and beliefs across four key dimensions of global mindedness:",
+      "By completing the survey, you'll gain insights into your attitudes and beliefs across four key dimensions of global mindedness:",
     dimensions: [
       {
         name: "Responsibility",
@@ -56,7 +56,7 @@ const content = {
   fr: {
     title: "Bienvenue au Global Mindedness Survey",
     intro:
-      "Ce court questionnaire vous invite à réfléchir à vos perspectives en tant que citoyen du monde. Adapté de l’échelle de global mindedness de Hett, le sondage est conçu pour mesurer votre vision du monde, votre sentiment d’interconnexion avec les autres et votre ouverture à la diversité culturelle.",
+      "Ce court questionnaire vous invite à réfléchir à vos perspectives en tant que citoyen du monde. Adapté de l'échelle de global mindedness de Hett, le sondage est conçu pour mesurer votre vision du monde, votre sentiment d'interconnexion avec les autres et votre ouverture à la diversité culturelle.",
     body:
       "En complétant le sondage, vous obtiendrez un aperçu de vos attitudes et croyances selon quatre dimensions clés de la pensée globale :",
     dimensions: [
@@ -72,7 +72,7 @@ const content = {
       {
         name: "Globalcentrisme",
         desc:
-          "la force avec laquelle vous vous identifiez en tant que membre d’une communauté mondiale au-delà des frontières locales ou nationales.",
+          "la force avec laquelle vous vous identifiez en tant que membre d'une communauté mondiale au-delà des frontières locales ou nationales.",
       },
       {
         name: "Efficacité",
@@ -80,7 +80,7 @@ const content = {
       },
     ],
     outro: [
-      "Ce sondage n’est pas un test, mais un outil d’autoréflexion. Il peut vous aider à mieux comprendre votre propre état d’esprit et sa relation avec la citoyenneté mondiale, la compréhension interculturelle et la responsabilité sociale.",
+      "Ce sondage n'est pas un test, mais un outil d'autoréflexion. Il peut vous aider à mieux comprendre votre propre état d'esprit et sa relation avec la citoyenneté mondiale, la compréhension interculturelle et la responsabilité sociale.",
       "Prenez quelques minutes pour répondre au sondage et explorer vos résultats - vous pourriez découvrir de nouvelles perspectives sur votre façon de vous relier au reste du monde.",
     ],
     start: "Commencer l'enquête",
