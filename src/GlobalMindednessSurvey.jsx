@@ -197,7 +197,7 @@ const fullSurveyData = {
       fr: ["Tout à fait en désaccord", "En désaccord", "Neutre", "D'accord", "Tout à fait d'accord"],
       es: ["Totalmente en desacuerdo", "En desacuerdo", "Neutral", "De acuerdo", "Totalmente de acuerdo"],
     },
-  };
+};
 
 const uiText = {
   en: {
