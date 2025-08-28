@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
 
 const fullSurveyData = {
     questions: {
@@ -361,15 +362,31 @@ const uiText = {
 
       drawBar(results.overallScore / results.overallMax, [54, 162, 235]);
 
-      const facetDescriptions = {
-        Responsibility:
-          "This facet captures a person's felt moral obligation toward people and problems beyond their own borders. Someone who scores high here experiences a \u201cdeep personal concern\u201d for global inequities and believes they ought to help relieve them, whether that means supporting human-rights campaigns, adjusting lifestyle choices to cut carbon, or advocating for fairer trade.",
-        CulturalPluralism:
-          'Global-minded individuals also prize diversity as an authentic good. The pluralism sub-scale gauges curiosity about unfamiliar customs, comfort with ambiguity, and the conviction that every culture \u201ccontributes something of value to the world.\u201d Rather than merely tolerating difference, it frames intercultural contact as a source of learning and mutual enrichment.',
-        Efficacy:
-          "Feeling responsible is only half the story; this dimension measures confidence that one\u2019s actions can matter. It taps an internalised sense of agency\u2014belief that writing to a legislator, mentoring a refugee, or changing consumption habits will, in aggregate, shift outcomes. High-efficacy respondents typically translate global concern into concrete initiatives because they assume their efforts are consequential.",
-        Interconnectedness:
-          'Finally, the scale explores how strongly a person perceives humanity\u2019s web of social, economic and ecological linkages. High scores reflect an \u201cappreciation for and awareness of the way in which all people from all nations are connected,\u201d from supply chains and digital media to shared climate systems and pandemics. This worldview encourages thinking in terms of ripple effects and mutual dependence rather than isolated national interests.',
+      const tableData = Object.entries(results.categoryScores)
+        .filter(([key]) => !key.includes('Max'))
+        .map(([category, score]) => [
+          fullSurveyData.categoryLabels[language][category],
+          score,
+          results.categoryScores[`${category}Max`],
+        ]);
+
+      autoTable(doc, {
+        startY: y,
+        head: [['Category', 'Score', 'Max']],
+        body: tableData,
+        styles: { halign: 'center' },
+        headStyles: { fillColor: [240, 240, 240], fontStyle: 'bold', textColor: 0 },
+        alternateRowStyles: { fillColor: [245, 245, 245] },
+      });
+
+      let barY = doc.lastAutoTable.finalY + 20;
+      const drawBarAt = (yPos, percent, color) => {
+        doc.setFillColor(200, 200, 200);
+        doc.roundedRect(margin + 2, yPos + 2, barWidth, barHeight, 3, 3, 'F');
+        doc.setFillColor(240, 240, 240);
+        doc.roundedRect(margin, yPos, barWidth, barHeight, 3, 3, 'F');
+        doc.setFillColor(color[0], color[1], color[2]);
+        doc.roundedRect(margin, yPos, barWidth * percent, barHeight, 3, 3, 'F');
       };
 
       Object.entries(results.categoryScores)
@@ -377,23 +394,10 @@ const uiText = {
         .forEach(([category, score]) => {
           const max = results.categoryScores[`${category}Max`];
           const percentage = score / max;
-
           doc.setFontSize(11);
-          doc.text(
-            `${fullSurveyData.categoryLabels[language][category]}: ${score} / ${max}`,
-            margin,
-            y
-          );
-          y += 11;
-          doc.setFontSize(9);
-          const descLines = doc.splitTextToSize(
-            facetDescriptions[category],
-            barWidth
-          );
-          doc.text(descLines, margin, y);
-          y += descLines.length * 9 + 3;
-          doc.setFontSize(11);
-          drawBar(percentage, [34, 197, 94]);
+          doc.text(fullSurveyData.categoryLabels[language][category], margin, barY - 4);
+          drawBarAt(barY, percentage, [34, 197, 94]);
+          barY += barHeight + 24;
         });
 
       const safeName = trimmedName ? trimmedName.replace(/\s+/g, '_') : 'GMS_results';
