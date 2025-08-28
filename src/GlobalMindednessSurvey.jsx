@@ -401,7 +401,7 @@ const uiText = {
     };
   
     return (
-      <div className="p-6 max-w-2xl mx-auto bg-white rounded-2xl shadow-xl mt-10 border border-gray-200">
+      <main className="p-6 max-w-2xl mx-auto bg-white rounded-2xl shadow-xl mt-10 border border-gray-200">
         <h1 className="text-4xl font-bold mb-6 text-center text-gray-800">{uiText[language].surveyTitle}</h1>
         <div className="mb-6 text-center">
           <select
@@ -514,7 +514,7 @@ const uiText = {
             </div>
           </div>
         )}
-      </div>
+      </main>
     );
   }
 
