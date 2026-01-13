@@ -204,13 +204,26 @@ const uiText = {
     surveyTitle: "Global Mindedness Survey",
     yourResults: "Your Results",
     overallScore: "Overall Score",
+    resultsSummaryTitle: "Results",
+    resultsSummaryEmphasis: "Summary",
+    summarySubtitle: "Global Mindedness Survey results overview",
     categoryScores: "Category Scores:",
+    facetHighlightsTitle: "Facet Highlights",
     downloadPdf: "Download PDF",
     takeSurveyAgain: "Take Survey Again",
     question: "Question",
     of: "of",
     nameLabel: "Your Name",
     namePlaceholder: "Enter your name",
+    optOutLabel: "Opt out of data collection",
+    optOutHint:
+      "Your answers will only be used to calculate your results on this device.",
+    optOutStatus: "Data collection: opted out",
+    optInStatus: "Data collection: consented",
+    participantLabel: "Participant",
+    reportDateLabel: "Report date",
+    pdfFooterNote:
+      "Scores are based on the Global Mindedness Scale (GMS).",
     interpretations: {
       low: "Low global-mindedness",
       moderate: "Moderate global-mindedness",
@@ -221,13 +234,24 @@ const uiText = {
     surveyTitle: "全球意识调查",
     yourResults: "你的结果",
     overallScore: "总分",
+    resultsSummaryTitle: "结果",
+    resultsSummaryEmphasis: "摘要",
+    summarySubtitle: "全球意识调查结果概览",
     categoryScores: "分类得分：",
+    facetHighlightsTitle: "维度亮点",
     downloadPdf: "下载 PDF",
     takeSurveyAgain: "再次参与调查",
     question: "问题",
     of: "/",
     nameLabel: "你的名字",
     namePlaceholder: "输入你的名字",
+    optOutLabel: "选择退出数据收集",
+    optOutHint: "你的回答仅用于在此设备上计算结果。",
+    optOutStatus: "数据收集：已退出",
+    optInStatus: "数据收集：已同意",
+    participantLabel: "参与者",
+    reportDateLabel: "报告日期",
+    pdfFooterNote: "分数基于全球意识量表（GMS）。",
     interpretations: {
       low: "全球意识低",
       moderate: "全球意识中等",
@@ -238,13 +262,26 @@ const uiText = {
     surveyTitle: "Sondage sur l'ouverture au monde",
     yourResults: "Vos résultats",
     overallScore: "Score total",
+    resultsSummaryTitle: "Résumé",
+    resultsSummaryEmphasis: "des résultats",
+    summarySubtitle: "Aperçu des résultats du sondage",
     categoryScores: "Scores par catégorie :",
+    facetHighlightsTitle: "Points forts par dimension",
     downloadPdf: "Télécharger le PDF",
     takeSurveyAgain: "Reprendre le sondage",
     question: "Question",
     of: "sur",
     nameLabel: "Votre nom",
     namePlaceholder: "Entrez votre nom",
+    optOutLabel: "Refuser la collecte de données",
+    optOutHint:
+      "Vos réponses servent uniquement à calculer vos résultats sur cet appareil.",
+    optOutStatus: "Collecte de données : refusée",
+    optInStatus: "Collecte de données : acceptée",
+    participantLabel: "Participant",
+    reportDateLabel: "Date du rapport",
+    pdfFooterNote:
+      "Les scores sont basés sur l’échelle de global-mindedness (GMS).",
     interpretations: {
       low: "Faible ouverture mondiale",
       moderate: "Ouverture mondiale modérée",
@@ -255,13 +292,26 @@ const uiText = {
     surveyTitle: "Encuesta de Mentalidad Global",
     yourResults: "Tus resultados",
     overallScore: "Puntuación total",
+    resultsSummaryTitle: "Resumen",
+    resultsSummaryEmphasis: "de resultados",
+    summarySubtitle: "Resumen de resultados de la encuesta",
     categoryScores: "Puntuaciones por categoría:",
+    facetHighlightsTitle: "Aspectos destacados",
     downloadPdf: "Descargar PDF",
     takeSurveyAgain: "Realizar la encuesta de nuevo",
     question: "Pregunta",
     of: "de",
     nameLabel: "Tu nombre",
     namePlaceholder: "Ingresa tu nombre",
+    optOutLabel: "Excluirme de la recopilación de datos",
+    optOutHint:
+      "Tus respuestas solo se usan para calcular resultados en este dispositivo.",
+    optOutStatus: "Recopilación de datos: excluida",
+    optInStatus: "Recopilación de datos: aceptada",
+    participantLabel: "Participante",
+    reportDateLabel: "Fecha del informe",
+    pdfFooterNote:
+      "Las puntuaciones se basan en la escala Global Mindedness (GMS).",
     interpretations: {
       low: "Baja mentalidad global",
       moderate: "Mentalidad global moderada",
@@ -277,6 +327,7 @@ const uiText = {
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [results, setResults] = useState(null);
     const [participantName, setParticipantName] = useState('');
+    const [optOut, setOptOut] = useState(false);
     const progress = (currentQuestion + 1) / questionCount;
   
     const handleAnswer = (value) => {
@@ -324,79 +375,183 @@ const uiText = {
 
       const doc = new jsPDF({ unit: 'pt', format: 'a4', orientation: 'landscape' });
       const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
       const margin = 40;
       const contentWidth = pageWidth - margin * 2;
-      let y = margin;
+      const headerHeight = 110;
+      const palette = {
+        accent: [236, 173, 45],
+        primary: [30, 41, 59],
+        muted: [100, 116, 139],
+        border: [226, 232, 240],
+        light: [248, 250, 252],
+      };
 
       const trimmedName = participantName.trim();
-      if (trimmedName) {
-        doc.setFontSize(12);
-        doc.text(trimmedName, margin, y);
-        y += 24;
-      }
+      const overallPercent = results.overallScore / results.overallMax;
 
-      doc.setFontSize(16);
-      doc.text(uiText[language].yourResults, pageWidth / 2, y, { align: 'center' });
+      doc.setFillColor(...palette.light);
+      doc.rect(0, 0, pageWidth, headerHeight, 'F');
 
-      y += 24;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(30);
+      doc.setTextColor(...palette.primary);
+      const titleText = `${uiText[language].resultsSummaryTitle} `;
+      doc.text(titleText, margin, 62);
+      const titleWidth = doc.getTextWidth(titleText);
+      doc.setTextColor(...palette.accent);
+      doc.text(uiText[language].resultsSummaryEmphasis, margin + titleWidth, 62);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(11);
+      doc.setTextColor(...palette.muted);
+      doc.text(uiText[language].summarySubtitle, margin, 84);
+
       doc.setFontSize(10);
+      const rightX = pageWidth - margin;
+      if (trimmedName) {
+        doc.text(
+          `${uiText[language].participantLabel}: ${trimmedName}`,
+          rightX,
+          50,
+          { align: 'right' }
+        );
+      }
       doc.text(
-        `${uiText[language].overallScore}: ${results.overallScore} / ${results.overallMax} (${results.interpretation})`,
-        margin,
-        y
+        optOut ? uiText[language].optOutStatus : uiText[language].optInStatus,
+        rightX,
+        68,
+        { align: 'right' }
+      );
+      doc.text(
+        `${uiText[language].reportDateLabel}: ${new Date().toLocaleDateString()}`,
+        rightX,
+        86,
+        { align: 'right' }
       );
 
-      y += 10;
-      const barWidth = contentWidth;
-      const barHeight = 10;
-      const drawBar = (percent, color) => {
-        doc.setFillColor(200, 200, 200);
-        doc.roundedRect(margin + 2, y + 2, barWidth, barHeight, 3, 3, 'F');
-        doc.setFillColor(240, 240, 240);
-        doc.roundedRect(margin, y, barWidth, barHeight, 3, 3, 'F');
+      const drawProgressBar = (x, y, width, height, percent, color) => {
+        doc.setFillColor(226, 232, 240);
+        doc.roundedRect(x, y, width, height, 6, 6, 'F');
         doc.setFillColor(color[0], color[1], color[2]);
-        doc.roundedRect(margin, y, barWidth * percent, barHeight, 3, 3, 'F');
-        y += barHeight + 16;
+        doc.roundedRect(x, y, width * percent, height, 6, 6, 'F');
       };
 
-      drawBar(results.overallScore / results.overallMax, [54, 162, 235]);
+      let y = headerHeight + 20;
+      const overallCardHeight = 120;
+      doc.setFillColor(255, 255, 255);
+      doc.setDrawColor(...palette.border);
+      doc.roundedRect(margin, y, contentWidth, overallCardHeight, 16, 16, 'FD');
 
-      const facetDescriptions = {
-        Responsibility:
-          "This facet captures a person's felt moral obligation toward people and problems beyond their own borders. Someone who scores high here experiences a \u201cdeep personal concern\u201d for global inequities and believes they ought to help relieve them, whether that means supporting human-rights campaigns, adjusting lifestyle choices to cut carbon, or advocating for fairer trade.",
-        CulturalPluralism:
-          'Global-minded individuals also prize diversity as an authentic good. The pluralism sub-scale gauges curiosity about unfamiliar customs, comfort with ambiguity, and the conviction that every culture \u201ccontributes something of value to the world.\u201d Rather than merely tolerating difference, it frames intercultural contact as a source of learning and mutual enrichment.',
-        Efficacy:
-          "Feeling responsible is only half the story; this dimension measures confidence that one\u2019s actions can matter. It taps an internalised sense of agency\u2014belief that writing to a legislator, mentoring a refugee, or changing consumption habits will, in aggregate, shift outcomes. High-efficacy respondents typically translate global concern into concrete initiatives because they assume their efforts are consequential.",
-        Interconnectedness:
-          'Finally, the scale explores how strongly a person perceives humanity\u2019s web of social, economic and ecological linkages. High scores reflect an \u201cappreciation for and awareness of the way in which all people from all nations are connected,\u201d from supply chains and digital media to shared climate systems and pandemics. This worldview encourages thinking in terms of ripple effects and mutual dependence rather than isolated national interests.',
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(16);
+      doc.setTextColor(...palette.primary);
+      doc.text(uiText[language].overallScore, margin + 24, y + 34);
+
+      doc.setFontSize(30);
+      doc.text(`${results.overallScore}`, margin + 24, y + 74);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(12);
+      doc.setTextColor(...palette.muted);
+      doc.text(
+        `/ ${results.overallMax}  •  ${results.interpretation}`,
+        margin + 90,
+        y + 74
+      );
+
+      drawProgressBar(
+        margin + 24,
+        y + 88,
+        contentWidth - 48,
+        12,
+        overallPercent,
+        palette.accent
+      );
+
+      y += overallCardHeight + 24;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(14);
+      doc.setTextColor(...palette.primary);
+      doc.text(uiText[language].facetHighlightsTitle, margin, y);
+
+      const cardY = y + 14;
+      const gap = 14;
+      const cardWidth = (contentWidth - gap * 3) / 4;
+      const cardHeight = 150;
+      const categoryOrder = [
+        'Responsibility',
+        'CulturalPluralism',
+        'Efficacy',
+        'Interconnectedness',
+      ];
+      const categoryColors = [
+        [59, 130, 246],
+        [245, 158, 11],
+        [16, 185, 129],
+        [139, 92, 246],
+      ];
+      const facetHighlights = {
+        Responsibility: 'Sense of moral obligation toward global challenges.',
+        CulturalPluralism: 'Appreciation for diversity and learning across cultures.',
+        Efficacy: 'Belief that personal action can drive global change.',
+        Interconnectedness: 'Awareness of global social and ecological linkages.',
       };
 
-      Object.entries(results.categoryScores)
-        .filter(([key]) => !key.includes('Max'))
-        .forEach(([category, score]) => {
-          const max = results.categoryScores[`${category}Max`];
-          const percentage = score / max;
+      categoryOrder.forEach((category, index) => {
+        const score = results.categoryScores[category];
+        const max = results.categoryScores[`${category}Max`];
+        const percentage = score / max;
+        const color = categoryColors[index];
+        const x = margin + index * (cardWidth + gap);
 
-          doc.setFontSize(11);
-          doc.text(
-            `${fullSurveyData.categoryLabels[language][category]}: ${score} / ${max}`,
-            margin,
-            y
-          );
-          y += 11;
-          doc.setFontSize(9);
-          const descLines = doc.splitTextToSize(
-            facetDescriptions[category],
-            barWidth
-          );
-          doc.text(descLines, margin, y);
-          y += descLines.length * 9 + 3;
-          doc.setFontSize(11);
-          drawBar(percentage, [34, 197, 94]);
+        doc.setFillColor(255, 255, 255);
+        doc.setDrawColor(...palette.border);
+        doc.roundedRect(x, cardY, cardWidth, cardHeight, 16, 16, 'FD');
+
+        const circleX = x + cardWidth / 2;
+        const circleY = cardY + 42;
+        doc.setFillColor(248, 250, 252);
+        doc.circle(circleX, circleY, 28, 'F');
+        doc.setDrawColor(color[0], color[1], color[2]);
+        doc.setLineWidth(4);
+        doc.circle(circleX, circleY, 28, 'S');
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(13);
+        doc.setTextColor(color[0], color[1], color[2]);
+        doc.text(`${Math.round(percentage * 100)}%`, circleX, circleY + 5, {
+          align: 'center',
         });
 
-      const safeName = trimmedName ? trimmedName.replace(/\s+/g, '_') : 'GMS_results';
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.setTextColor(...palette.primary);
+        doc.text(
+          fullSurveyData.categoryLabels[language][category],
+          x + 12,
+          cardY + 92,
+          { maxWidth: cardWidth - 24 }
+        );
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        doc.setTextColor(...palette.muted);
+        doc.text(`${score} / ${max}`, x + 12, cardY + 112);
+
+        doc.setFontSize(9);
+        const highlightLines = doc.splitTextToSize(
+          facetHighlights[category],
+          cardWidth - 24
+        );
+        doc.text(highlightLines, x + 12, cardY + 128);
+      });
+
+      doc.setFontSize(9);
+      doc.setTextColor(...palette.muted);
+      doc.text(uiText[language].pdfFooterNote, margin, pageHeight - 24);
+
+      const safeName = trimmedName
+        ? trimmedName.replace(/\s+/g, '_')
+        : 'GMS_results';
       doc.save(`${safeName}_GMS_results.pdf`);
     };
   
@@ -468,6 +623,22 @@ const uiText = {
                 className="w-full border p-2 rounded"
               />
             </div>
+            <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+              <label className="flex items-start gap-3">
+                <input
+                  type="checkbox"
+                  className="mt-1 h-4 w-4 rounded border-amber-400 text-amber-600 focus:ring-amber-500"
+                  checked={optOut}
+                  onChange={(e) => setOptOut(e.target.checked)}
+                />
+                <span>
+                  <span className="font-semibold">{uiText[language].optOutLabel}</span>
+                  <span className="mt-1 block text-amber-700">
+                    {uiText[language].optOutHint}
+                  </span>
+                </span>
+              </label>
+            </div>
 
             <button
               className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white text-xl py-3 rounded-2xl shadow-lg"
@@ -517,4 +688,3 @@ const uiText = {
       </div>
     );
   }
-
