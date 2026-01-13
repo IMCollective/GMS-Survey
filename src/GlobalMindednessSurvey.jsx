@@ -211,6 +211,14 @@ const uiText = {
     of: "of",
     nameLabel: "Your Name",
     namePlaceholder: "Enter your name",
+    emailLabel: "Email Address",
+    emailPlaceholder: "name@example.com",
+    consentLabel: "I consent to my email and survey responses being recorded for internal research purposes.",
+    consentRequired: "Please provide your email and consent before continuing.",
+    participantInfo: "Participant Information",
+    consentStatus: "Consent",
+    consentGiven: "Provided",
+    consentMissing: "Not provided",
     interpretations: {
       low: "Low global-mindedness",
       moderate: "Moderate global-mindedness",
@@ -228,6 +236,14 @@ const uiText = {
     of: "/",
     nameLabel: "你的名字",
     namePlaceholder: "输入你的名字",
+    emailLabel: "电子邮箱",
+    emailPlaceholder: "name@example.com",
+    consentLabel: "我同意我的电子邮箱和调查结果用于内部研究记录。",
+    consentRequired: "请先填写邮箱并同意后再继续。",
+    participantInfo: "参与者信息",
+    consentStatus: "同意",
+    consentGiven: "已提供",
+    consentMissing: "未提供",
     interpretations: {
       low: "全球意识低",
       moderate: "全球意识中等",
@@ -245,6 +261,14 @@ const uiText = {
     of: "sur",
     nameLabel: "Votre nom",
     namePlaceholder: "Entrez votre nom",
+    emailLabel: "Adresse e-mail",
+    emailPlaceholder: "nom@exemple.com",
+    consentLabel: "J'accepte que mon e-mail et mes réponses soient enregistrés à des fins de recherche interne.",
+    consentRequired: "Veuillez fournir votre e-mail et votre consentement avant de continuer.",
+    participantInfo: "Informations du participant",
+    consentStatus: "Consentement",
+    consentGiven: "Fourni",
+    consentMissing: "Non fourni",
     interpretations: {
       low: "Faible ouverture mondiale",
       moderate: "Ouverture mondiale modérée",
@@ -262,6 +286,14 @@ const uiText = {
     of: "de",
     nameLabel: "Tu nombre",
     namePlaceholder: "Ingresa tu nombre",
+    emailLabel: "Correo electrónico",
+    emailPlaceholder: "nombre@ejemplo.com",
+    consentLabel: "Consiento que mi correo electrónico y mis respuestas se registren para investigación interna.",
+    consentRequired: "Proporciona tu correo y consentimiento antes de continuar.",
+    participantInfo: "Información del participante",
+    consentStatus: "Consentimiento",
+    consentGiven: "Otorgado",
+    consentMissing: "No otorgado",
     interpretations: {
       low: "Baja mentalidad global",
       moderate: "Mentalidad global moderada",
@@ -277,7 +309,10 @@ const uiText = {
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [results, setResults] = useState(null);
     const [participantName, setParticipantName] = useState('');
+    const [participantEmail, setParticipantEmail] = useState('');
+    const [consentGiven, setConsentGiven] = useState(false);
     const progress = (currentQuestion + 1) / questionCount;
+    const canAnswer = participantEmail.trim() && consentGiven;
   
     const handleAnswer = (value) => {
       const updated = [...responses];
@@ -329,11 +364,24 @@ const uiText = {
       let y = margin;
 
       const trimmedName = participantName.trim();
+      const trimmedEmail = participantEmail.trim();
       if (trimmedName) {
         doc.setFontSize(12);
         doc.text(trimmedName, margin, y);
         y += 24;
       }
+      if (trimmedEmail) {
+        doc.setFontSize(10);
+        doc.text(trimmedEmail, margin, y);
+        y += 18;
+      }
+      doc.setFontSize(9);
+      doc.text(
+        `${uiText[language].consentStatus}: ${consentGiven ? uiText[language].consentGiven : uiText[language].consentMissing}`,
+        margin,
+        y
+      );
+      y += 18;
 
       doc.setFontSize(16);
       doc.text(uiText[language].yourResults, pageWidth / 2, y, { align: 'center' });
@@ -421,6 +469,23 @@ const uiText = {
         {results ? (
           <div>
             <h2 className="text-2xl font-semibold mb-4 text-gray-700">{uiText[language].yourResults}</h2>
+            <div className="mb-6 rounded-2xl border border-gray-200 bg-gray-50 p-4">
+              <h3 className="text-lg font-semibold text-gray-700 mb-3">{uiText[language].participantInfo}</h3>
+              <div className="space-y-2 text-sm text-gray-600">
+                <p>
+                  <span className="font-semibold">{uiText[language].nameLabel}:</span>{" "}
+                  {participantName.trim() || "—"}
+                </p>
+                <p>
+                  <span className="font-semibold">{uiText[language].emailLabel}:</span>{" "}
+                  {participantEmail.trim() || "—"}
+                </p>
+                <p>
+                  <span className="font-semibold">{uiText[language].consentStatus}:</span>{" "}
+                  {consentGiven ? uiText[language].consentGiven : uiText[language].consentMissing}
+                </p>
+              </div>
+            </div>
             <p className="text-lg mb-4 text-gray-600">
               {uiText[language].overallScore}: <strong>{results.overallScore} / {results.overallMax}</strong> ({results.interpretation})
             </p>
@@ -482,6 +547,9 @@ const uiText = {
                 setResults(null);
                 setResponses(Array(questionCount).fill(null));
                 setCurrentQuestion(0);
+                setParticipantName('');
+                setParticipantEmail('');
+                setConsentGiven(false);
               }}
             >
               {uiText[language].takeSurveyAgain}
@@ -489,6 +557,36 @@ const uiText = {
           </div>
         ) : (
           <div className="space-y-8">
+            <div className="border rounded-2xl p-6 shadow-lg bg-gray-50">
+              <h2 className="text-xl font-semibold text-gray-700 mb-4">{uiText[language].participantInfo}</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="block mb-2 text-gray-700" htmlFor="participant-email">
+                    {uiText[language].emailLabel}
+                  </label>
+                  <input
+                    id="participant-email"
+                    type="email"
+                    value={participantEmail}
+                    onChange={(e) => setParticipantEmail(e.target.value)}
+                    placeholder={uiText[language].emailPlaceholder}
+                    className="w-full border p-2 rounded"
+                  />
+                </div>
+                <label className="flex items-start gap-3 text-sm text-gray-600">
+                  <input
+                    type="checkbox"
+                    checked={consentGiven}
+                    onChange={(e) => setConsentGiven(e.target.checked)}
+                    className="mt-1 h-4 w-4 rounded border-gray-300 text-blue-600"
+                  />
+                  <span>{uiText[language].consentLabel}</span>
+                </label>
+                {!canAnswer ? (
+                  <p className="text-sm text-red-600">{uiText[language].consentRequired}</p>
+                ) : null}
+              </div>
+            </div>
             <div className="border rounded-2xl p-8 shadow-lg bg-gray-50">
               <p className="mb-6 text-lg font-medium text-gray-700 text-center">
                 {uiText[language].question} {currentQuestion + 1} {uiText[language].of} {questionCount}
@@ -504,8 +602,11 @@ const uiText = {
                 {fullSurveyData.scaleDescriptors[language].map((desc, idx) => (
                   <button
                     key={idx + 1}
-                    className="px-6 py-4 text-lg border rounded-2xl hover:bg-blue-100 bg-white shadow text-gray-700 font-medium transition-all w-full text-left"
-                    onClick={() => handleAnswer(idx + 1)}
+                    className={`px-6 py-4 text-lg border rounded-2xl shadow text-gray-700 font-medium transition-all w-full text-left ${
+                      canAnswer ? "hover:bg-blue-100 bg-white" : "bg-gray-100 cursor-not-allowed"
+                    }`}
+                    onClick={() => canAnswer && handleAnswer(idx + 1)}
+                    disabled={!canAnswer}
                   >
                     <strong>{idx + 1}:</strong> {desc}
                   </button>
@@ -517,4 +618,3 @@ const uiText = {
       </div>
     );
   }
-
