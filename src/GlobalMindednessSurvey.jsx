@@ -465,10 +465,14 @@ const uiText = {
         [139, 92, 246],
       ];
       const facetHighlights = {
-        Responsibility: 'Sense of moral obligation toward global challenges.',
-        CulturalPluralism: 'Appreciation for diversity and learning across cultures.',
-        Efficacy: 'Belief that personal action can drive global change.',
-        Interconnectedness: 'Awareness of global social and ecological linkages.',
+        Responsibility:
+          'Reflects personal obligation to respond to global inequities, human rights, and environmental concerns with care, empathy, and follow-through.',
+        CulturalPluralism:
+          'Measures curiosity about diverse cultures, comfort with difference, and the belief that cross-cultural exchange enriches communities.',
+        Efficacy:
+          'Captures confidence that individual actions, advocacy, and daily choices can meaningfully influence global outcomes over time.',
+        Interconnectedness:
+          'Indicates awareness of how societies and ecosystems are linked through trade, media, migration, and shared environmental impacts.',
       };
 
       categoryOrder.forEach((category, index) => {
