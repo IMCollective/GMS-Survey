@@ -451,7 +451,7 @@ const uiText = {
       const cardY = y + 14;
       const gap = 14;
       const cardWidth = (contentWidth - gap * 3) / 4;
-      const cardHeight = 150;
+      const cardHeight = 190;
       const categoryOrder = [
         'Responsibility',
         'CulturalPluralism',
@@ -487,7 +487,7 @@ const uiText = {
         doc.roundedRect(x, cardY, cardWidth, cardHeight, 16, 16, 'FD');
 
         const circleX = x + cardWidth / 2;
-        const circleY = cardY + 42;
+        const circleY = cardY + 50;
         doc.setFillColor(248, 250, 252);
         doc.circle(circleX, circleY, 28, 'F');
         doc.setDrawColor(color[0], color[1], color[2]);
@@ -506,21 +506,21 @@ const uiText = {
         doc.text(
           fullSurveyData.categoryLabels[language][category],
           x + 12,
-          cardY + 92,
+          cardY + 108,
           { maxWidth: cardWidth - 24 }
         );
 
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(10);
         doc.setTextColor(...palette.muted);
-        doc.text(`${score} / ${max}`, x + 12, cardY + 112);
+        doc.text(`${score} / ${max}`, x + 12, cardY + 130);
 
         doc.setFontSize(9);
         const highlightLines = doc.splitTextToSize(
           facetHighlights[category],
           cardWidth - 24
         );
-        doc.text(highlightLines, x + 12, cardY + 128);
+        doc.text(highlightLines, x + 12, cardY + 148);
       });
 
       doc.setFontSize(9);
