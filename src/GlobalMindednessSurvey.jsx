@@ -215,11 +215,6 @@ const uiText = {
     of: "of",
     nameLabel: "Your Name",
     namePlaceholder: "Enter your name",
-    optOutLabel: "Opt out of data collection",
-    optOutHint:
-      "Your answers will only be used to calculate your results on this device.",
-    optOutStatus: "Data collection: opted out",
-    optInStatus: "Data collection: consented",
     participantLabel: "Participant",
     reportDateLabel: "Report date",
     pdfFooterNote:
@@ -245,10 +240,6 @@ const uiText = {
     of: "/",
     nameLabel: "你的名字",
     namePlaceholder: "输入你的名字",
-    optOutLabel: "选择退出数据收集",
-    optOutHint: "你的回答仅用于在此设备上计算结果。",
-    optOutStatus: "数据收集：已退出",
-    optInStatus: "数据收集：已同意",
     participantLabel: "参与者",
     reportDateLabel: "报告日期",
     pdfFooterNote: "分数基于全球意识量表（GMS）。",
@@ -273,11 +264,6 @@ const uiText = {
     of: "sur",
     nameLabel: "Votre nom",
     namePlaceholder: "Entrez votre nom",
-    optOutLabel: "Refuser la collecte de données",
-    optOutHint:
-      "Vos réponses servent uniquement à calculer vos résultats sur cet appareil.",
-    optOutStatus: "Collecte de données : refusée",
-    optInStatus: "Collecte de données : acceptée",
     participantLabel: "Participant",
     reportDateLabel: "Date du rapport",
     pdfFooterNote:
@@ -303,11 +289,6 @@ const uiText = {
     of: "de",
     nameLabel: "Tu nombre",
     namePlaceholder: "Ingresa tu nombre",
-    optOutLabel: "Excluirme de la recopilación de datos",
-    optOutHint:
-      "Tus respuestas solo se usan para calcular resultados en este dispositivo.",
-    optOutStatus: "Recopilación de datos: excluida",
-    optInStatus: "Recopilación de datos: aceptada",
     participantLabel: "Participante",
     reportDateLabel: "Fecha del informe",
     pdfFooterNote:
@@ -327,7 +308,6 @@ const uiText = {
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [results, setResults] = useState(null);
     const [participantName, setParticipantName] = useState('');
-    const [optOut, setOptOut] = useState(false);
     const progress = (currentQuestion + 1) / questionCount;
   
     const handleAnswer = (value) => {
@@ -418,15 +398,9 @@ const uiText = {
         );
       }
       doc.text(
-        optOut ? uiText[language].optOutStatus : uiText[language].optInStatus,
-        rightX,
-        68,
-        { align: 'right' }
-      );
-      doc.text(
         `${uiText[language].reportDateLabel}: ${new Date().toLocaleDateString()}`,
         rightX,
-        86,
+        68,
         { align: 'right' }
       );
 
@@ -623,23 +597,6 @@ const uiText = {
                 className="w-full border p-2 rounded"
               />
             </div>
-            <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-              <label className="flex items-start gap-3">
-                <input
-                  type="checkbox"
-                  className="mt-1 h-4 w-4 rounded border-amber-400 text-amber-600 focus:ring-amber-500"
-                  checked={optOut}
-                  onChange={(e) => setOptOut(e.target.checked)}
-                />
-                <span>
-                  <span className="font-semibold">{uiText[language].optOutLabel}</span>
-                  <span className="mt-1 block text-amber-700">
-                    {uiText[language].optOutHint}
-                  </span>
-                </span>
-              </label>
-            </div>
-
             <button
               className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white text-xl py-3 rounded-2xl shadow-lg"
               onClick={downloadPdf}
