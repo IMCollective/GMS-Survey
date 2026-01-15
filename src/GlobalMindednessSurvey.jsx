@@ -373,22 +373,7 @@ const uiText = {
       doc.setFillColor(...palette.light);
       doc.rect(0, 0, pageWidth, headerHeight, 'F');
 
-      const drawPdfLogo = (x, y, size) => {
-        const radius = size / 2;
-        doc.setFillColor(37, 99, 235);
-        doc.circle(x + radius, y + radius, radius, 'F');
-        doc.setFillColor(34, 197, 94);
-        doc.circle(x + radius, y + radius, radius * 0.72, 'F');
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(12);
-        doc.setTextColor(255, 255, 255);
-        doc.text('GMS', x + radius, y + radius + 4, { align: 'center' });
-      };
-
-      const logoSize = 36;
-      drawPdfLogo(margin, 28, logoSize);
-
-      const titleX = margin + logoSize + 16;
+      const titleX = margin;
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(30);
       doc.setTextColor(...palette.primary);
