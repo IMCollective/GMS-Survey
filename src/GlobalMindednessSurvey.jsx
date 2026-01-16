@@ -210,6 +210,8 @@ const uiText = {
     categoryScores: "Category Scores:",
     facetHighlightsTitle: "Facet Highlights",
     downloadPdf: "Download PDF",
+    downloadCsv: "Download CSV",
+    emailResults: "Email Results",
     takeSurveyAgain: "Take Survey Again",
     question: "Question",
     of: "of",
@@ -235,6 +237,8 @@ const uiText = {
     categoryScores: "分类得分：",
     facetHighlightsTitle: "维度亮点",
     downloadPdf: "下载 PDF",
+    downloadCsv: "下载 CSV",
+    emailResults: "通过电子邮件发送结果",
     takeSurveyAgain: "再次参与调查",
     question: "问题",
     of: "/",
@@ -259,6 +263,8 @@ const uiText = {
     categoryScores: "Scores par catégorie :",
     facetHighlightsTitle: "Points forts par dimension",
     downloadPdf: "Télécharger le PDF",
+    downloadCsv: "Télécharger CSV",
+    emailResults: "Envoyer les résultats par e-mail",
     takeSurveyAgain: "Reprendre le sondage",
     question: "Question",
     of: "sur",
@@ -284,6 +290,8 @@ const uiText = {
     categoryScores: "Puntuaciones por categoría:",
     facetHighlightsTitle: "Aspectos destacados",
     downloadPdf: "Descargar PDF",
+    downloadCsv: "Descargar CSV",
+    emailResults: "Enviar resultados por correo",
     takeSurveyAgain: "Realizar la encuesta de nuevo",
     question: "Pregunta",
     of: "de",
@@ -532,6 +540,49 @@ const uiText = {
         : 'GMS_results';
       doc.save(`${safeName}_GMS_results.pdf`);
     };
+
+    const downloadCsv = () => {
+      if (!results) return;
+
+      const rows = [
+        ['Metric', 'Score', 'Max'],
+        ['Overall', results.overallScore, results.overallMax],
+        ...Object.entries(results.categoryScores)
+          .filter(([key]) => !key.includes('Max'))
+          .map(([category, score]) => {
+            const max = results.categoryScores[`${category}Max`];
+            return [fullSurveyData.categoryLabels[language][category], score, max];
+          }),
+      ];
+
+      const csvContent = rows.map((r) => r.join(',')).join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'results.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    };
+
+    const emailResults = () => {
+      if (!results) return;
+
+      const subject = encodeURIComponent('Global Mindedness Survey Results');
+      const bodyLines = [
+        `${uiText[language].overallScore}: ${results.overallScore} / ${results.overallMax} (${results.interpretation})`,
+        ...Object.entries(results.categoryScores)
+          .filter(([key]) => !key.includes('Max'))
+          .map(([category, score]) => {
+            const max = results.categoryScores[`${category}Max`];
+            return `${fullSurveyData.categoryLabels[language][category]}: ${score} / ${max}`;
+          }),
+      ];
+      const body = encodeURIComponent(bodyLines.join('\n'));
+      window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    };
   
     return (
       <div className="p-6 max-w-2xl mx-auto bg-white rounded-2xl shadow-xl mt-10 border border-gray-200">
@@ -606,6 +657,20 @@ const uiText = {
               onClick={downloadPdf}
             >
               {uiText[language].downloadPdf}
+            </button>
+
+            <button
+              className="mt-4 w-full bg-purple-600 hover:bg-purple-700 text-white text-xl py-3 rounded-2xl shadow-lg"
+              onClick={emailResults}
+            >
+              {uiText[language].emailResults}
+            </button>
+
+            <button
+              className="mt-4 w-full bg-yellow-500 hover:bg-yellow-600 text-white text-xl py-3 rounded-2xl shadow-lg"
+              onClick={downloadCsv}
+            >
+              {uiText[language].downloadCsv}
             </button>
 
             <button
