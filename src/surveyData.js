@@ -1,0 +1,607 @@
+export const fullSurveyData = {
+    questions: {
+      en: [
+        "I generally find it stimulating to spend an evening talking with people from another culture.",
+        "I feel concerned when I see my government doing something I consider wrong.",
+        "My country is enriched by the fact that it comprises many people from different cultures and countries.",
+        "Really, there is nothing I can do about the problems of the world.",
+        "The needs of my country must continue to be our highest priority in negotiating with other countries.",
+        "I often think about the kind of world we are creating for future generations.",
+        "When I hear that thousands of people are starving in another country, I feel very frustrated.",
+        "People can learn something of value from all different cultures.",
+        "Generally, an individual's actions are too small to have a significant effect on the ecosystem.",
+        "People should be permitted to pursue the standard of living they can afford, if it only has a slight negative impact on the environment.",
+        "I think of myself not only as a citizen of my country but also as a citizen of the world.",
+        "When I see the conditions some people in the world live under, I feel a responsibility to do something about it.",
+        "I enjoy trying to understand people's behavior in the context of their culture.",
+        "My opinions about national policies are based on how those policies might affect the rest of the world.",
+        "It is very important to me to choose a career in which I can have a positive effect on the quality of life for future generations.",
+        "My cultural values are probably the best.",
+        "In the long run, my country will probably benefit from the fact that the world is becoming more interconnected.",
+        "The fact that a flood can kill thousands of people in another country is very depressing to me.",
+        "It is important that universities and colleges provide programs designed to promote understanding among students of different ethnic and cultural backgrounds.",
+        "I think my behavior can impact people in other countries.",
+        "The present distribution of the world's wealth and resources should be maintained because it promotes survival of the fittest.",
+        "I feel a strong kinship with the worldwide human family.",
+        "I feel very concerned about the lives of people who live in politically repressive regimes.",
+        "It is important that we educate people to understand the impact that current policies might have on future generations.",
+        "It is not really important to me to consider myself as a member of the global community.",
+        "I sometimes try to imagine how a person who is always hungry must feel.",
+        "I have very little in common with people in underdeveloped nations.",
+        "I am able to affect what happens on a global level by what I do in my own community.",
+        "I sometimes feel irritated with people from other countries because they don't understand how we do things here.",
+        "People have a moral obligation to share their wealth with the less fortunate peoples of the world."
+      ],
+      zh: [
+        "我通常觉得与来自其他文化的人共度一个晚上聊天很有趣。",
+        "当我看到政府做一些我认为错误的事情时，我会感到担忧。",
+        "我的国家因拥有来自不同文化和国家的人民而更加丰富。",
+        "实际上，世界的问题我无能为力。",
+        "在与其他国家谈判时，我国的需求必须始终放在首位。",
+        "我经常思考我们正在为后代创造一个怎样的世界。",
+        "当我听说另一个国家有成千上万人在挨饿时，我感到非常沮丧。",
+        "人们可以从各种不同的文化中学到有价值的东西。",
+        "通常个人的行动太小，无法对生态系统产生重大影响。",
+        "如果对环境只有轻微的负面影响，人们应该被允许追求他们负担得起的生活水平。",
+        "我认为自己不仅是我国家的公民，也是世界公民。",
+        "当我看到世界上有些人的生活条件时，我觉得有责任做些什么。",
+        "我喜欢在文化背景下理解人们的行为。",
+        "我对国家政策的看法基于这些政策可能对世界其他地方产生的影响。",
+        "对我来说，选择一份能对后代的生活质量产生积极影响的职业非常重要。",
+        "我的文化价值观可能是最好的。",
+        "从长远来看，我的国家可能会因为世界日益互联而受益。",
+        "得知洪水能在其他国家夺走成千上万人的生命，我感到十分沮丧。",
+        "大学和学院应当提供项目，以促进不同民族和文化背景学生之间的理解。",
+        "我认为我的行为会影响到其他国家的人。",
+        "世界财富和资源目前的分配应当保持，因为它促进了适者生存。",
+        "我与全世界的人类家庭感到强烈的亲情。",
+        "我对生活在政治压制政权下的人的生活感到非常关切。",
+        "我们有必要教育人们了解当前政策可能对后代产生的影响。",
+        "是否把自己看作全球社区的一员对我来说并不重要。",
+        "我有时会试着想象一个长期饥饿的人会有什么感受。",
+        "我与欠发达国家的人几乎没有共同之处。",
+        "通过在自己社区的行动，我能影响全球层面发生的事情。",
+        "有时我会对外国人感到恼火，因为他们不了解我们在这里的做事方式。",
+        "人们有道德义务与世界上不幸的人分享他们的财富。"
+      ],
+      fr: [
+        "Je trouve généralement stimulant de passer une soirée à discuter avec des personnes d'une autre culture.",
+        "Je me sens préoccupé lorsque je vois mon gouvernement faire quelque chose que je considère comme mal.",
+        "Mon pays est enrichi par le fait qu'il comprend de nombreuses personnes de différentes cultures et nationalités.",
+        "En réalité, il n'y a rien que je puisse faire concernant les problèmes du monde.",
+        "Les besoins de mon pays doivent rester notre priorité absolue dans les négociations avec les autres pays.",
+        "Je pense souvent au type de monde que nous créons pour les générations futures.",
+        "Lorsque j'entends que des milliers de personnes meurent de faim dans un autre pays, je me sens très frustré.",
+        "On peut apprendre quelque chose de valeur de toutes les cultures différentes.",
+        "En général, les actions d'un individu sont trop minimes pour avoir un effet significatif sur l'écosystème.",
+        "Les gens devraient être autorisés à rechercher le niveau de vie qu'ils peuvent se permettre si cela n'a qu'un impact négatif minime sur l'environnement.",
+        "Je me considère non seulement comme un citoyen de mon pays mais aussi comme un citoyen du monde.",
+        "Lorsque je vois les conditions dans lesquelles vivent certaines personnes dans le monde, je me sens responsable de faire quelque chose.",
+        "J'apprécie d'essayer de comprendre le comportement des gens dans le contexte de leur culture.",
+        "Mes opinions sur les politiques nationales se basent sur la façon dont ces politiques pourraient affecter le reste du monde.",
+        "Il est très important pour moi de choisir une carrière où je peux avoir un effet positif sur la qualité de vie des générations futures.",
+        "Mes valeurs culturelles sont probablement les meilleures.",
+        "À long terme, mon pays bénéficiera probablement du fait que le monde devient de plus en plus interconnecté.",
+        "Le fait qu'une inondation puisse tuer des milliers de personnes dans un autre pays me déprime beaucoup.",
+        "Il est important que les universités et les collèges offrent des programmes destinés à promouvoir la compréhension entre étudiants de différentes origines ethniques et culturelles.",
+        "Je pense que mon comportement peut avoir un impact sur les gens d'autres pays.",
+        "La distribution actuelle des richesses et des ressources mondiales devrait être maintenue parce qu'elle favorise la survie du plus apte.",
+        "Je ressens une forte parenté avec la famille humaine mondiale.",
+        "Je suis très préoccupé par la vie des personnes qui vivent sous des régimes politiquement répressifs.",
+        "Il est important d'éduquer les gens pour qu'ils comprennent l'impact que les politiques actuelles pourraient avoir sur les générations futures.",
+        "Il n'est pas vraiment important pour moi de me considérer comme membre de la communauté mondiale.",
+        "J'essaie parfois d'imaginer ce que ressent une personne qui a toujours faim.",
+        "J'ai très peu de choses en commun avec les personnes des pays sous-développés.",
+        "Je suis capable d'influer sur ce qui se passe au niveau mondial par ce que je fais dans ma propre communauté.",
+        "Je me sens parfois irrité par les gens d'autres pays parce qu'ils ne comprennent pas notre façon de faire.",
+        "Les gens ont l'obligation morale de partager leur richesse avec les peuples moins fortunés du monde."
+      ],
+      es: [
+        "Generalmente me resulta estimulante pasar una noche hablando con personas de otra cultura.",
+        "Me siento preocupado cuando veo que mi gobierno hace algo que considero incorrecto.",
+        "Mi país se enriquece por el hecho de que está compuesto por muchas personas de diferentes culturas y países.",
+        "En realidad, no hay nada que yo pueda hacer respecto a los problemas del mundo.",
+        "Las necesidades de mi país deben seguir siendo nuestra máxima prioridad al negociar con otros países.",
+        "A menudo pienso en el tipo de mundo que estamos creando para las generaciones futuras.",
+        "Cuando escucho que miles de personas se mueren de hambre en otro país, me siento muy frustrado.",
+        "La gente puede aprender algo valioso de todas las diferentes culturas.",
+        "Por lo general, las acciones de un individuo son demasiado pequeñas para tener un efecto significativo en el ecosistema.",
+        "Se debería permitir a las personas buscar el nivel de vida que puedan costearse, si solo tiene un impacto negativo leve en el medio ambiente.",
+        "Me considero no solo ciudadano de mi país sino también ciudadano del mundo.",
+        "Cuando veo las condiciones en las que vive alguna gente en el mundo, siento la responsabilidad de hacer algo.",
+        "Disfruto intentar entender el comportamiento de las personas en el contexto de su cultura.",
+        "Mis opiniones sobre las políticas nacionales se basan en cómo esas políticas podrían afectar al resto del mundo.",
+        "Es muy importante para mí elegir una carrera en la que pueda tener un efecto positivo en la calidad de vida de las futuras generaciones.",
+        "Mis valores culturales son probablemente los mejores.",
+        "A la larga, mi país probablemente se beneficiará del hecho de que el mundo está cada vez más interconectado.",
+        "El hecho de que una inundación pueda matar a miles de personas en otro país me deprime mucho.",
+        "Es importante que las universidades y los colegios ofrezcan programas diseñados para promover la comprensión entre estudiantes de diferentes orígenes étnicos y culturales.",
+        "Creo que mi comportamiento puede impactar a personas en otros países.",
+        "La distribución actual de la riqueza y los recursos del mundo debería mantenerse porque promueve la supervivencia del más apto.",
+        "Siento un fuerte vínculo con la familia humana mundial.",
+        "Me preocupan mucho las vidas de las personas que viven en regímenes políticamente represivos.",
+        "Es importante que eduquemos a la gente para que comprenda el impacto que las políticas actuales podrían tener en las generaciones futuras.",
+        "No es realmente importante para mí considerarme miembro de la comunidad global.",
+        "A veces intento imaginar cómo debe sentirse una persona que siempre tiene hambre.",
+        "Tengo muy poco en común con la gente de las naciones subdesarrolladas.",
+        "Soy capaz de afectar lo que sucede a nivel global por lo que hago en mi propia comunidad.",
+        "A veces me siento irritado con personas de otros países porque no entienden cómo hacemos las cosas aquí.",
+        "La gente tiene la obligación moral de compartir su riqueza con los pueblos menos afortunados del mundo."
+      ]
+    },
+    // Scoring key from Hett's Global-Mindedness Scale: reverse-score the
+    // listed items (1-based), then sum all 30 responses (range 30-150).
+    reverse_scoring: [4, 5, 9, 10, 16, 21, 25, 27, 29],
+    categories: {
+      Responsibility: [2, 7, 12, 18, 23, 26, 30],
+      CulturalPluralism: [1, 3, 8, 13, 14, 19, 24, 27],
+      Efficacy: [4, 9, 15, 20, 28],
+      Globalcentrism: [5, 10, 16, 21, 29],
+      Interconnectedness: [6, 11, 17, 22, 25],
+    },
+    categoryLabels: {
+      en: {
+        Responsibility: "Responsibility",
+        CulturalPluralism: "Cultural Pluralism",
+        Efficacy: "Efficacy",
+        Globalcentrism: "Globalcentrism",
+        Interconnectedness: "Interconnectedness",
+      },
+      zh: {
+        Responsibility: "责任",
+        CulturalPluralism: "文化多元性",
+        Efficacy: "效能感",
+        Globalcentrism: "全球中心意识",
+        Interconnectedness: "互联性",
+      },
+      fr: {
+        Responsibility: "Responsabilité",
+        CulturalPluralism: "Pluralisme culturel",
+        Efficacy: "Efficacité",
+        Globalcentrism: "Globalocentrisme",
+        Interconnectedness: "Interconnexion",
+      },
+      es: {
+        Responsibility: "Responsabilidad",
+        CulturalPluralism: "Pluralismo cultural",
+        Efficacy: "Eficacia",
+        Globalcentrism: "Globalcentrismo",
+        Interconnectedness: "Interconexión",
+      },
+    },
+    categoryDescriptions: {
+      en: {
+        Responsibility: "Measures your sense of personal duty and concern for global issues.",
+        CulturalPluralism: "Measures your openness to and appreciation of diverse cultures.",
+        Efficacy: "Reflects how much you believe your actions can make a difference globally.",
+        Globalcentrism: "Reflects how far you weigh the good of the global community alongside your own country's interests.",
+        Interconnectedness: "Represents how strongly you feel connected to people and events worldwide.",
+      },
+      zh: {
+        Responsibility: "衡量你对全球问题的个人责任感和关切。",
+        CulturalPluralism: "衡量你对多元文化的开放与欣赏程度。",
+        Efficacy: "反映你相信自己的行动在全球产生影响的程度。",
+        Globalcentrism: "反映你在多大程度上将全球共同利益与本国利益一并考量。",
+        Interconnectedness: "代表你与世界各地的人和事件感到联系的强度。",
+      },
+      fr: {
+        Responsibility: "Mesure votre sens du devoir personnel et votre préoccupation pour les enjeux mondiaux.",
+        CulturalPluralism: "Mesure votre ouverture et votre appréciation des diverses cultures.",
+        Efficacy: "Reflète dans quelle mesure vous pensez que vos actions peuvent faire la différence à l'échelle mondiale.",
+        Globalcentrism: "Reflète dans quelle mesure vous prenez en compte le bien de la communauté mondiale au même titre que les intérêts de votre pays.",
+        Interconnectedness: "Représente la force avec laquelle vous vous sentez connecté aux personnes et événements dans le monde.",
+      },
+      es: {
+        Responsibility: "Mide tu sentido del deber personal y la preocupación por los asuntos globales.",
+        CulturalPluralism: "Mide tu apertura y apreciación de diversas culturas.",
+        Efficacy: "Refleja cuánto crees que tus acciones pueden marcar la diferencia a nivel global.",
+        Globalcentrism: "Refleja en qué medida consideras el bien de la comunidad global junto con los intereses de tu propio país.",
+        Interconnectedness: "Representa qué tan conectado te sientes con las personas y eventos del mundo.",
+      },
+    },
+    scaleDescriptors: {
+      en: ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"],
+      zh: ["非常不同意", "不同意", "中立", "同意", "非常同意"],
+      fr: ["Tout à fait en désaccord", "En désaccord", "Neutre", "D'accord", "Tout à fait d'accord"],
+      es: ["Totalmente en desacuerdo", "En desacuerdo", "Neutral", "De acuerdo", "Totalmente de acuerdo"],
+    },
+  };
+
+export const uiText = {
+  en: {
+    surveyTitle: "Global Mindedness Survey",
+    yourResults: "Your Results",
+    overallScore: "Overall Score",
+    resultsSummaryTitle: "Results",
+    resultsSummaryEmphasis: "Summary",
+    summarySubtitle: "Global Mindedness Survey results overview",
+    categoryScores: "Category Scores:",
+    facetHighlightsTitle: "Facet Highlights",
+    downloadPdf: "Download PDF",
+    takeSurveyAgain: "Take Survey Again",
+    question: "Question",
+    of: "of",
+    back: "Back",
+    nameLabel: "Your Name",
+    namePlaceholder: "Enter your name",
+    participantLabel: "Participant",
+    reportDateLabel: "Report date",
+    pdfFooterNote:
+      "Scores are based on the Global Mindedness Scale (GMS).",
+    interpretations: {
+      low: "Low global-mindedness",
+      moderate: "Moderate global-mindedness",
+      high: "High global-mindedness",
+    },
+    bandNames: { low: "Low", moderate: "Moderate", high: "High" },
+    growTitle: "Ways to develop this",
+    welcomeTitle: "Welcome to the Global Mindedness Survey",
+    welcomeBody:
+      "This short questionnaire measures your attitudes about global citizenship and cultural understanding.",
+    startButton: "Start Survey",
+    aboutDomainsTitle: "What does this survey measure?",
+    aboutDomainsIntro:
+      "The survey looks at five dimensions of global-mindedness. You'll receive a score for each:",
+  },
+  zh: {
+    surveyTitle: "全球意识调查",
+    yourResults: "你的结果",
+    overallScore: "总分",
+    resultsSummaryTitle: "结果",
+    resultsSummaryEmphasis: "摘要",
+    summarySubtitle: "全球意识调查结果概览",
+    categoryScores: "分类得分：",
+    facetHighlightsTitle: "维度亮点",
+    downloadPdf: "下载 PDF",
+    takeSurveyAgain: "再次参与调查",
+    question: "问题",
+    of: "/",
+    back: "上一题",
+    nameLabel: "你的名字",
+    namePlaceholder: "输入你的名字",
+    participantLabel: "参与者",
+    reportDateLabel: "报告日期",
+    pdfFooterNote: "分数基于全球意识量表（GMS）。",
+    interpretations: {
+      low: "全球意识低",
+      moderate: "全球意识中等",
+      high: "全球意识高",
+    },
+    bandNames: { low: "低", moderate: "中等", high: "高" },
+    growTitle: "提升建议",
+    welcomeTitle: "欢迎参加全球意识调查",
+    welcomeBody: "本问卷测量你对全球公民意识与文化理解的态度。",
+    startButton: "开始调查",
+    aboutDomainsTitle: "本调查测量什么？",
+    aboutDomainsIntro: "本调查考察全球意识的五个维度，你将获得每个维度的得分：",
+  },
+  fr: {
+    surveyTitle: "Sondage sur l'ouverture au monde",
+    yourResults: "Vos résultats",
+    overallScore: "Score total",
+    resultsSummaryTitle: "Résumé",
+    resultsSummaryEmphasis: "des résultats",
+    summarySubtitle: "Aperçu des résultats du sondage",
+    categoryScores: "Scores par catégorie :",
+    facetHighlightsTitle: "Points forts par dimension",
+    downloadPdf: "Télécharger le PDF",
+    takeSurveyAgain: "Reprendre le sondage",
+    question: "Question",
+    of: "sur",
+    back: "Retour",
+    nameLabel: "Votre nom",
+    namePlaceholder: "Entrez votre nom",
+    participantLabel: "Participant",
+    reportDateLabel: "Date du rapport",
+    pdfFooterNote:
+      "Les scores sont basés sur l’échelle de global-mindedness (GMS).",
+    interpretations: {
+      low: "Faible ouverture mondiale",
+      moderate: "Ouverture mondiale modérée",
+      high: "Forte ouverture mondiale",
+    },
+    bandNames: { low: "Faible", moderate: "Modéré", high: "Élevé" },
+    growTitle: "Pistes de développement",
+    welcomeTitle: "Bienvenue au sondage sur l'ouverture au monde",
+    welcomeBody:
+      "Ce court questionnaire mesure vos attitudes concernant la citoyenneté mondiale et la compréhension culturelle.",
+    startButton: "Commencer le sondage",
+    aboutDomainsTitle: "Que mesure ce sondage ?",
+    aboutDomainsIntro:
+      "Le sondage examine cinq dimensions de l'ouverture au monde. Vous recevrez un score pour chacune :",
+  },
+  es: {
+    surveyTitle: "Encuesta de Mentalidad Global",
+    yourResults: "Tus resultados",
+    overallScore: "Puntuación total",
+    resultsSummaryTitle: "Resumen",
+    resultsSummaryEmphasis: "de resultados",
+    summarySubtitle: "Resumen de resultados de la encuesta",
+    categoryScores: "Puntuaciones por categoría:",
+    facetHighlightsTitle: "Aspectos destacados",
+    downloadPdf: "Descargar PDF",
+    takeSurveyAgain: "Realizar la encuesta de nuevo",
+    question: "Pregunta",
+    of: "de",
+    back: "Atrás",
+    nameLabel: "Tu nombre",
+    namePlaceholder: "Ingresa tu nombre",
+    participantLabel: "Participante",
+    reportDateLabel: "Fecha del informe",
+    pdfFooterNote:
+      "Las puntuaciones se basan en la escala Global Mindedness (GMS).",
+    interpretations: {
+      low: "Baja mentalidad global",
+      moderate: "Mentalidad global moderada",
+      high: "Alta mentalidad global",
+    },
+    bandNames: { low: "Bajo", moderate: "Moderado", high: "Alto" },
+    growTitle: "Cómo desarrollarlo",
+    welcomeTitle: "Bienvenido a la Encuesta de Mentalidad Global",
+    welcomeBody:
+      "Este breve cuestionario mide tus actitudes sobre la ciudadanía global y la comprensión cultural.",
+    startButton: "Comenzar la encuesta",
+    aboutDomainsTitle: "¿Qué mide esta encuesta?",
+    aboutDomainsIntro:
+      "La encuesta examina cinco dimensiones de la mentalidad global. Recibirás una puntuación en cada una:",
+  },
+};
+
+export const facetEducation = {
+  en: {
+    Responsibility: {
+      bands: {
+        low: "Global problems may feel outside your sphere of duty right now. Awareness is the starting point many people build from.",
+        moderate: "You feel genuine concern for global issues and act on it when an opportunity is clear.",
+        high: "You feel a strong personal duty toward people affected by global inequities, and you tend to follow through.",
+      },
+      tips: [
+        "Follow one global issue in depth for a month and learn who it affects and why.",
+        "Volunteer time with a local group working on an international cause.",
+        "When news of a crisis breaks, look up one concrete way to help and act on it.",
+      ],
+    },
+    CulturalPluralism: {
+      bands: {
+        low: "Familiar cultural settings may feel most comfortable to you. Curiosity about other cultures grows with low-stakes exposure.",
+        moderate: "You are open to other cultures and enjoy learning from them when they cross your path.",
+        high: "You actively seek out cultural difference and experience it as enriching your life and community.",
+      },
+      tips: [
+        "Watch a film or read a novel from a culture you know little about.",
+        "Start a conversation exchange with someone learning your language.",
+        "Attend a cultural festival or community event outside your own tradition.",
+      ],
+    },
+    Efficacy: {
+      bands: {
+        low: "Individual actions may feel too small to matter globally. Small visible wins are the quickest way to shift this.",
+        moderate: "You believe personal actions can count, and you act when the path to impact is clear.",
+        high: "You are confident that your everyday choices and advocacy contribute to global outcomes.",
+      },
+      tips: [
+        "Pick one consumption habit and trace its global footprint, then adjust it.",
+        "Join a local project linked to a global goal, such as a repair café or conservation group.",
+        "Write to a representative about an international issue you care about.",
+      ],
+    },
+    Globalcentrism: {
+      bands: {
+        low: "You tend to put your own country's interests first when weighing global questions — a very common starting point.",
+        moderate: "You balance national interests with consideration for what serves the wider world.",
+        high: "You often reason from what is good for the global community, even when it challenges national priorities.",
+      },
+      tips: [
+        "Read coverage of the same story from news outlets in two other countries.",
+        "When you form a view on a policy, ask who outside your country it affects.",
+        "Learn how an international agreement your country signed works in practice.",
+      ],
+    },
+    Interconnectedness: {
+      bands: {
+        low: "People and events far away may feel remote from your daily life. Connections become real through direct contact.",
+        moderate: "You often notice the ties linking people and places worldwide, and at times feel part of that larger whole.",
+        high: "You feel a strong kinship with people everywhere and readily see how societies and ecosystems are linked.",
+      },
+      tips: [
+        "Trace where three everyday items you own were made and by whom.",
+        "Join an international online community around one of your hobbies.",
+        "Map how one distant event this year has touched your own life.",
+      ],
+    },
+  },
+  zh: {
+    Responsibility: {
+      bands: {
+        low: "目前全球问题可能让你觉得超出了自己的责任范围。意识到这一点正是许多人成长的起点。",
+        moderate: "你对全球议题怀有真切的关注，并在机会明确时付诸行动。",
+        high: "你对受全球不平等影响的人们怀有强烈的个人责任感，并倾向于付诸行动。",
+      },
+      tips: [
+        "选择一个全球议题深入关注一个月，了解它影响到谁以及原因。",
+        "在当地参与一个关注国际事务的志愿组织。",
+        "当危机新闻出现时，查找一个具体的援助方式并付诸行动。",
+      ],
+    },
+    CulturalPluralism: {
+      bands: {
+        low: "你可能更习惯熟悉的文化环境。通过轻松的接触，对其他文化的好奇心会逐渐增长。",
+        moderate: "你对其他文化持开放态度，并乐于在日常接触中学习。",
+        high: "你主动寻求文化差异，并感到它丰富了你的生活和社区。",
+      },
+      tips: [
+        "观看一部来自你不太了解的文化的电影，或阅读一本相关小说。",
+        "与正在学习你的母语的人开展语言交换。",
+        "参加一个你自身传统之外的文化节或社区活动。",
+      ],
+    },
+    Efficacy: {
+      bands: {
+        low: "个人行动可能让你觉得太微小而无法影响全球。小而可见的成果是改变这种感觉的最快途径。",
+        moderate: "你相信个人行动是有意义的，并在影响路径清晰时采取行动。",
+        high: "你相信自己的日常选择和倡导会对全球结果产生影响。",
+      },
+      tips: [
+        "选择一个消费习惯，追踪它的全球足迹，然后做出调整。",
+        "参与一个与全球目标相关的本地项目，例如维修咖啡馆或环保小组。",
+        "就你关心的国际议题给民意代表写信。",
+      ],
+    },
+    Globalcentrism: {
+      bands: {
+        low: "在权衡全球问题时，你倾向于把本国利益放在首位——这是非常普遍的起点。",
+        moderate: "你在国家利益与更广阔世界的福祉之间寻求平衡。",
+        high: "你常常从全球共同利益出发思考问题，即使这意味着重新审视国家优先事项。",
+      },
+      tips: [
+        "从另外两个国家的媒体阅读同一新闻的报道。",
+        "在对一项政策形成看法时，想一想它会影响到本国之外的哪些人。",
+        "了解你的国家签署的一项国际协定在实践中如何运作。",
+      ],
+    },
+    Interconnectedness: {
+      bands: {
+        low: "遥远的人和事可能让你觉得与日常生活无关。联系往往通过直接接触而变得真实。",
+        moderate: "你经常注意到连接世界各地人与地方的纽带，有时也感到自己是这个整体的一部分。",
+        high: "你对世界各地的人怀有强烈的亲近感，并能敏锐地看到社会与生态系统之间的联系。",
+      },
+      tips: [
+        "追溯你拥有的三件日常物品的产地和制造者。",
+        "围绕你的一个爱好加入一个国际线上社区。",
+        "梳理今年一件远方发生的事件如何影响了你的生活。",
+      ],
+    },
+  },
+  fr: {
+    Responsibility: {
+      bands: {
+        low: "Les problèmes mondiaux peuvent sembler hors de votre champ de responsabilité pour l'instant. En prendre conscience est le point de départ de beaucoup.",
+        moderate: "Vous ressentez une préoccupation sincère pour les enjeux mondiaux et agissez lorsque l'occasion est claire.",
+        high: "Vous ressentez un fort devoir personnel envers les personnes touchées par les inégalités mondiales et vous passez volontiers à l'action.",
+      },
+      tips: [
+        "Suivez un enjeu mondial en profondeur pendant un mois et découvrez qui il touche et pourquoi.",
+        "Donnez de votre temps à un groupe local engagé dans une cause internationale.",
+        "Lorsqu'une crise fait l'actualité, cherchez un moyen concret d'aider et passez à l'action.",
+      ],
+    },
+    CulturalPluralism: {
+      bands: {
+        low: "Les environnements culturels familiers vous semblent peut-être plus confortables. La curiosité envers d'autres cultures grandit par des contacts sans enjeu.",
+        moderate: "Vous êtes ouvert aux autres cultures et aimez apprendre à leur contact au quotidien.",
+        high: "Vous recherchez activement la diversité culturelle et la vivez comme un enrichissement pour votre vie et votre communauté.",
+      },
+      tips: [
+        "Regardez un film ou lisez un roman d'une culture que vous connaissez peu.",
+        "Lancez un échange de conversation avec une personne qui apprend votre langue.",
+        "Participez à un festival culturel ou à un événement hors de votre propre tradition.",
+      ],
+    },
+    Efficacy: {
+      bands: {
+        low: "Les actions individuelles peuvent sembler trop petites pour compter à l'échelle mondiale. De petites réussites visibles sont le meilleur moyen d'en changer.",
+        moderate: "Vous croyez que les actions personnelles comptent et agissez quand le chemin vers l'impact est clair.",
+        high: "Vous êtes convaincu que vos choix quotidiens et votre engagement contribuent aux résultats mondiaux.",
+      },
+      tips: [
+        "Choisissez une habitude de consommation, retracez son empreinte mondiale, puis ajustez-la.",
+        "Rejoignez un projet local lié à un objectif mondial, comme un repair café ou un groupe de protection de la nature.",
+        "Écrivez à un élu au sujet d'un enjeu international qui vous tient à cœur.",
+      ],
+    },
+    Globalcentrism: {
+      bands: {
+        low: "Vous avez tendance à faire passer les intérêts de votre pays en premier dans les questions mondiales — un point de départ très courant.",
+        moderate: "Vous cherchez un équilibre entre les intérêts nationaux et le bien du monde entier.",
+        high: "Vous raisonnez souvent à partir de ce qui est bon pour la communauté mondiale, même lorsque cela remet en question les priorités nationales.",
+      },
+      tips: [
+        "Lisez la couverture d'un même événement par des médias de deux autres pays.",
+        "Avant de vous faire une opinion sur une politique, demandez-vous qui elle touche hors de votre pays.",
+        "Découvrez comment fonctionne en pratique un accord international signé par votre pays.",
+      ],
+    },
+    Interconnectedness: {
+      bands: {
+        low: "Les personnes et les événements lointains peuvent sembler éloignés de votre quotidien. Les liens deviennent réels par le contact direct.",
+        moderate: "Vous remarquez souvent les liens qui unissent les peuples et les lieux, et vous vous sentez parfois partie de ce grand ensemble.",
+        high: "Vous ressentez une forte parenté avec les gens du monde entier et percevez aisément les liens entre sociétés et écosystèmes.",
+      },
+      tips: [
+        "Retracez l'origine de trois objets de votre quotidien et qui les a fabriqués.",
+        "Rejoignez une communauté en ligne internationale autour d'un de vos loisirs.",
+        "Identifiez comment un événement lointain de cette année a touché votre propre vie.",
+      ],
+    },
+  },
+  es: {
+    Responsibility: {
+      bands: {
+        low: "Puede que los problemas globales parezcan quedar fuera de tu ámbito de responsabilidad por ahora. Tomar conciencia es el punto de partida de muchas personas.",
+        moderate: "Sientes una preocupación genuina por los asuntos globales y actúas cuando la oportunidad es clara.",
+        high: "Sientes un fuerte deber personal hacia las personas afectadas por las desigualdades globales y sueles pasar a la acción.",
+      },
+      tips: [
+        "Sigue a fondo un asunto global durante un mes y aprende a quién afecta y por qué.",
+        "Dedica tiempo como voluntario a un grupo local que trabaje por una causa internacional.",
+        "Cuando una crisis salga en las noticias, busca una forma concreta de ayudar y llévala a cabo.",
+      ],
+    },
+    CulturalPluralism: {
+      bands: {
+        low: "Puede que los entornos culturales conocidos te resulten más cómodos. La curiosidad por otras culturas crece con contactos sin presión.",
+        moderate: "Estás abierto a otras culturas y disfrutas aprendiendo de ellas en el día a día.",
+        high: "Buscas activamente la diversidad cultural y la vives como un enriquecimiento para tu vida y tu comunidad.",
+      },
+      tips: [
+        "Ve una película o lee una novela de una cultura que conozcas poco.",
+        "Inicia un intercambio de conversación con alguien que esté aprendiendo tu idioma.",
+        "Asiste a un festival cultural o evento fuera de tu propia tradición.",
+      ],
+    },
+    Efficacy: {
+      bands: {
+        low: "Las acciones individuales pueden parecer demasiado pequeñas para importar a escala global. Los logros pequeños y visibles son la vía más rápida para cambiarlo.",
+        moderate: "Crees que las acciones personales cuentan y actúas cuando el camino hacia el impacto es claro.",
+        high: "Confías en que tus elecciones diarias y tu activismo contribuyen a los resultados globales.",
+      },
+      tips: [
+        "Elige un hábito de consumo, rastrea su huella global y ajústalo.",
+        "Únete a un proyecto local vinculado a un objetivo global, como un café de reparación o un grupo de conservación.",
+        "Escribe a un representante sobre un asunto internacional que te importe.",
+      ],
+    },
+    Globalcentrism: {
+      bands: {
+        low: "Tiendes a poner primero los intereses de tu país al valorar cuestiones globales: un punto de partida muy común.",
+        moderate: "Equilibras los intereses nacionales con la consideración de lo que sirve al mundo en general.",
+        high: "A menudo razonas desde lo que es bueno para la comunidad global, incluso cuando cuestiona las prioridades nacionales.",
+      },
+      tips: [
+        "Lee la cobertura de una misma noticia en medios de otros dos países.",
+        "Al formarte una opinión sobre una política, pregúntate a quién afecta fuera de tu país.",
+        "Aprende cómo funciona en la práctica un acuerdo internacional firmado por tu país.",
+      ],
+    },
+    Interconnectedness: {
+      bands: {
+        low: "Las personas y los acontecimientos lejanos pueden parecer ajenos a tu vida diaria. Los vínculos se vuelven reales con el contacto directo.",
+        moderate: "Sueles notar los lazos que unen a personas y lugares del mundo, y a veces te sientes parte de ese conjunto mayor.",
+        high: "Sientes un fuerte parentesco con la gente de todo el mundo y percibes con facilidad los vínculos entre sociedades y ecosistemas.",
+      },
+      tips: [
+        "Rastrea dónde y por quién se fabricaron tres objetos cotidianos que posees.",
+        "Únete a una comunidad internacional en línea sobre una de tus aficiones.",
+        "Identifica cómo un acontecimiento lejano de este año ha influido en tu propia vida.",
+      ],
+    },
+  },
+};
+
+// Per-facet bands scale Hett's overall cut-offs (low <= 59, moderate <= 104,
+// out of 150) down to each facet's item count.
+export const getFacetBand = (score, itemCount) => {
+  const lowMax = Math.round((59 / 150) * itemCount * 5);
+  const moderateMax = Math.round((104 / 150) * itemCount * 5);
+  return score <= lowMax ? 'low' : score <= moderateMax ? 'moderate' : 'high';
+};
