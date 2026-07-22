@@ -1,322 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { jsPDF } from "jspdf";
+import { fullSurveyData, uiText, facetEducation, getFacetBand } from "./surveyData";
 
-const fullSurveyData = {
-    questions: {
-      en: [
-        "I generally find it stimulating to spend an evening talking with people from another culture.",
-        "I feel concerned when I see my government doing something I consider wrong.",
-        "My country is enriched by the fact that it comprises many people from different cultures and countries.",
-        "Really, there is nothing I can do about the problems of the world.",
-        "The needs of my country must continue to be our highest priority in negotiating with other countries.",
-        "I often think about the kind of world we are creating for future generations.",
-        "When I hear that thousands of people are starving in another country, I feel very frustrated.",
-        "People can learn something of value from all different cultures.",
-        "Generally, an individual's actions are too small to have a significant effect on the ecosystem.",
-        "People should be permitted to pursue the standard of living they can afford, if it only has a slight negative impact on the environment.",
-        "I think of myself not only as a citizen of my country but also as a citizen of the world.",
-        "When I see the conditions some people in the world live under, I feel a responsibility to do something about it.",
-        "I enjoy trying to understand people's behavior in the context of their culture.",
-        "My opinions about national policies are based on how those policies might affect the rest of the world.",
-        "It is very important to me to choose a career in which I can have a positive effect on the quality of life for future generations.",
-        "My cultural values are probably the best.",
-        "In the long run, my country will probably benefit from the fact that the world is becoming more interconnected.",
-        "The fact that a flood can kill thousands of people in another country is very depressing to me.",
-        "It is important that universities and colleges provide programs designed to promote understanding among students of different ethnic and cultural backgrounds.",
-        "I think my behavior can impact people in other countries.",
-        "The present distribution of the world's wealth and resources should be maintained because it promotes survival of the fittest.",
-        "I feel a strong kinship with the worldwide human family.",
-        "I feel very concerned about the lives of people who live in politically repressive regimes.",
-        "It is important that we educate people to understand the impact that current policies might have on future generations.",
-        "It is not really important to me to consider myself as a member of the global community.",
-        "I sometimes try to imagine how a person who is always hungry must feel.",
-        "I have very little in common with people in underdeveloped nations.",
-        "I am able to affect what happens on a global level by what I do in my own community.",
-        "I sometimes feel irritated with people from other countries because they don't understand how we do things here.",
-        "People have a moral obligation to share their wealth with the less fortunate peoples of the world."
-      ],
-      zh: [
-        "我通常觉得与来自其他文化的人共度一个晚上聊天很有趣。",
-        "当我看到政府做一些我认为错误的事情时，我会感到担忧。",
-        "我的国家因拥有来自不同文化和国家的人民而更加丰富。",
-        "实际上，世界的问题我无能为力。",
-        "在与其他国家谈判时，我国的需求必须始终放在首位。",
-        "我经常思考我们正在为后代创造一个怎样的世界。",
-        "当我听说另一个国家有成千上万人在挨饿时，我感到非常沮丧。",
-        "人们可以从各种不同的文化中学到有价值的东西。",
-        "通常个人的行动太小，无法对生态系统产生重大影响。",
-        "如果对环境只有轻微的负面影响，人们应该被允许追求他们负担得起的生活水平。",
-        "我认为自己不仅是我国家的公民，也是世界公民。",
-        "当我看到世界上有些人的生活条件时，我觉得有责任做些什么。",
-        "我喜欢在文化背景下理解人们的行为。",
-        "我对国家政策的看法基于这些政策可能对世界其他地方产生的影响。",
-        "对我来说，选择一份能对后代的生活质量产生积极影响的职业非常重要。",
-        "我的文化价值观可能是最好的。",
-        "从长远来看，我的国家可能会因为世界日益互联而受益。",
-        "得知洪水能在其他国家夺走成千上万人的生命，我感到十分沮丧。",
-        "大学和学院应当提供项目，以促进不同民族和文化背景学生之间的理解。",
-        "我认为我的行为会影响到其他国家的人。",
-        "世界财富和资源目前的分配应当保持，因为它促进了适者生存。",
-        "我与全世界的人类家庭感到强烈的亲情。",
-        "我对生活在政治压制政权下的人的生活感到非常关切。",
-        "我们有必要教育人们了解当前政策可能对后代产生的影响。",
-        "是否把自己看作全球社区的一员对我来说并不重要。",
-        "我有时会试着想象一个长期饥饿的人会有什么感受。",
-        "我与欠发达国家的人几乎没有共同之处。",
-        "通过在自己社区的行动，我能影响全球层面发生的事情。",
-        "有时我会对外国人感到恼火，因为他们不了解我们在这里的做事方式。",
-        "人们有道德义务与世界上不幸的人分享他们的财富。"
-      ],
-      fr: [
-        "Je trouve généralement stimulant de passer une soirée à discuter avec des personnes d'une autre culture.",
-        "Je me sens préoccupé lorsque je vois mon gouvernement faire quelque chose que je considère comme mal.",
-        "Mon pays est enrichi par le fait qu'il comprend de nombreuses personnes de différentes cultures et nationalités.",
-        "En réalité, il n'y a rien que je puisse faire concernant les problèmes du monde.",
-        "Les besoins de mon pays doivent rester notre priorité absolue dans les négociations avec les autres pays.",
-        "Je pense souvent au type de monde que nous créons pour les générations futures.",
-        "Lorsque j'entends que des milliers de personnes meurent de faim dans un autre pays, je me sens très frustré.",
-        "On peut apprendre quelque chose de valeur de toutes les cultures différentes.",
-        "En général, les actions d'un individu sont trop minimes pour avoir un effet significatif sur l'écosystème.",
-        "Les gens devraient être autorisés à rechercher le niveau de vie qu'ils peuvent se permettre si cela n'a qu'un impact négatif minime sur l'environnement.",
-        "Je me considère non seulement comme un citoyen de mon pays mais aussi comme un citoyen du monde.",
-        "Lorsque je vois les conditions dans lesquelles vivent certaines personnes dans le monde, je me sens responsable de faire quelque chose.",
-        "J'apprécie d'essayer de comprendre le comportement des gens dans le contexte de leur culture.",
-        "Mes opinions sur les politiques nationales se basent sur la façon dont ces politiques pourraient affecter le reste du monde.",
-        "Il est très important pour moi de choisir une carrière où je peux avoir un effet positif sur la qualité de vie des générations futures.",
-        "Mes valeurs culturelles sont probablement les meilleures.",
-        "À long terme, mon pays bénéficiera probablement du fait que le monde devient de plus en plus interconnecté.",
-        "Le fait qu'une inondation puisse tuer des milliers de personnes dans un autre pays me déprime beaucoup.",
-        "Il est important que les universités et les collèges offrent des programmes destinés à promouvoir la compréhension entre étudiants de différentes origines ethniques et culturelles.",
-        "Je pense que mon comportement peut avoir un impact sur les gens d'autres pays.",
-        "La distribution actuelle des richesses et des ressources mondiales devrait être maintenue parce qu'elle favorise la survie du plus apte.",
-        "Je ressens une forte parenté avec la famille humaine mondiale.",
-        "Je suis très préoccupé par la vie des personnes qui vivent sous des régimes politiquement répressifs.",
-        "Il est important d'éduquer les gens pour qu'ils comprennent l'impact que les politiques actuelles pourraient avoir sur les générations futures.",
-        "Il n'est pas vraiment important pour moi de me considérer comme membre de la communauté mondiale.",
-        "J'essaie parfois d'imaginer ce que ressent une personne qui a toujours faim.",
-        "J'ai très peu de choses en commun avec les personnes des pays sous-développés.",
-        "Je suis capable d'influer sur ce qui se passe au niveau mondial par ce que je fais dans ma propre communauté.",
-        "Je me sens parfois irrité par les gens d'autres pays parce qu'ils ne comprennent pas notre façon de faire.",
-        "Les gens ont l'obligation morale de partager leur richesse avec les peuples moins fortunés du monde."
-      ],
-      es: [
-        "Generalmente me resulta estimulante pasar una noche hablando con personas de otra cultura.",
-        "Me siento preocupado cuando veo que mi gobierno hace algo que considero incorrecto.",
-        "Mi país se enriquece por el hecho de que está compuesto por muchas personas de diferentes culturas y países.",
-        "En realidad, no hay nada que yo pueda hacer respecto a los problemas del mundo.",
-        "Las necesidades de mi país deben seguir siendo nuestra máxima prioridad al negociar con otros países.",
-        "A menudo pienso en el tipo de mundo que estamos creando para las generaciones futuras.",
-        "Cuando escucho que miles de personas se mueren de hambre en otro país, me siento muy frustrado.",
-        "La gente puede aprender algo valioso de todas las diferentes culturas.",
-        "Por lo general, las acciones de un individuo son demasiado pequeñas para tener un efecto significativo en el ecosistema.",
-        "Se debería permitir a las personas buscar el nivel de vida que puedan costearse, si solo tiene un impacto negativo leve en el medio ambiente.",
-        "Me considero no solo ciudadano de mi país sino también ciudadano del mundo.",
-        "Cuando veo las condiciones en las que vive alguna gente en el mundo, siento la responsabilidad de hacer algo.",
-        "Disfruto intentar entender el comportamiento de las personas en el contexto de su cultura.",
-        "Mis opiniones sobre las políticas nacionales se basan en cómo esas políticas podrían afectar al resto del mundo.",
-        "Es muy importante para mí elegir una carrera en la que pueda tener un efecto positivo en la calidad de vida de las futuras generaciones.",
-        "Mis valores culturales son probablemente los mejores.",
-        "A la larga, mi país probablemente se beneficiará del hecho de que el mundo está cada vez más interconectado.",
-        "El hecho de que una inundación pueda matar a miles de personas en otro país me deprime mucho.",
-        "Es importante que las universidades y los colegios ofrezcan programas diseñados para promover la comprensión entre estudiantes de diferentes orígenes étnicos y culturales.",
-        "Creo que mi comportamiento puede impactar a personas en otros países.",
-        "La distribución actual de la riqueza y los recursos del mundo debería mantenerse porque promueve la supervivencia del más apto.",
-        "Siento un fuerte vínculo con la familia humana mundial.",
-        "Me preocupan mucho las vidas de las personas que viven en regímenes políticamente represivos.",
-        "Es importante que eduquemos a la gente para que comprenda el impacto que las políticas actuales podrían tener en las generaciones futuras.",
-        "No es realmente importante para mí considerarme miembro de la comunidad global.",
-        "A veces intento imaginar cómo debe sentirse una persona que siempre tiene hambre.",
-        "Tengo muy poco en común con la gente de las naciones subdesarrolladas.",
-        "Soy capaz de afectar lo que sucede a nivel global por lo que hago en mi propia comunidad.",
-        "A veces me siento irritado con personas de otros países porque no entienden cómo hacemos las cosas aquí.",
-        "La gente tiene la obligación moral de compartir su riqueza con los pueblos menos afortunados del mundo."
-      ]
-    },
-    reverse_scoring: [4, 5, 9, 10, 16, 21, 25, 27, 29],
-    categories: {
-      Responsibility: [2, 7, 12, 18, 23, 26, 30],
-      CulturalPluralism: [1, 3, 8, 13, 14, 19, 24],
-      Efficacy: [4, 9, 15, 20, 28],
-      Interconnectedness: [6, 11, 17, 22, 25],
-    },
-    categoryLabels: {
-      en: {
-        Responsibility: "Responsibility",
-        CulturalPluralism: "Cultural Pluralism",
-        Efficacy: "Efficacy",
-        Interconnectedness: "Interconnectedness",
-      },
-      zh: {
-        Responsibility: "责任",
-        CulturalPluralism: "文化多元性",
-        Efficacy: "效能感",
-        Interconnectedness: "互联性",
-      },
-      fr: {
-        Responsibility: "Responsabilité",
-        CulturalPluralism: "Pluralisme culturel",
-        Efficacy: "Efficacité",
-        Interconnectedness: "Interconnexion",
-      },
-      es: {
-        Responsibility: "Responsabilidad",
-        CulturalPluralism: "Pluralismo cultural",
-        Efficacy: "Eficacia",
-        Interconnectedness: "Interconexión",
-      },
-    },
-    categoryDescriptions: {
-      en: {
-        Responsibility: "Measures your sense of personal duty and concern for global issues.",
-        CulturalPluralism: "Measures your openness to and appreciation of diverse cultures.",
-        Efficacy: "Reflects how much you believe your actions can make a difference globally.",
-        Interconnectedness: "Represents how strongly you feel connected to people and events worldwide.",
-      },
-      zh: {
-        Responsibility: "衡量你对全球问题的个人责任感和关切。",
-        CulturalPluralism: "衡量你对多元文化的开放与欣赏程度。",
-        Efficacy: "反映你相信自己的行动在全球产生影响的程度。",
-        Interconnectedness: "代表你与世界各地的人和事件感到联系的强度。",
-      },
-      fr: {
-        Responsibility: "Mesure votre sens du devoir personnel et votre préoccupation pour les enjeux mondiaux.",
-        CulturalPluralism: "Mesure votre ouverture et votre appréciation des diverses cultures.",
-        Efficacy: "Reflète dans quelle mesure vous pensez que vos actions peuvent faire la différence à l'échelle mondiale.",
-        Interconnectedness: "Représente la force avec laquelle vous vous sentez connecté aux personnes et événements dans le monde.",
-      },
-      es: {
-        Responsibility: "Mide tu sentido del deber personal y la preocupación por los asuntos globales.",
-        CulturalPluralism: "Mide tu apertura y apreciación de diversas culturas.",
-        Efficacy: "Refleja cuánto crees que tus acciones pueden marcar la diferencia a nivel global.",
-        Interconnectedness: "Representa qué tan conectado te sientes con las personas y eventos del mundo.",
-      },
-    },
-    scaleDescriptors: {
-      en: ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"],
-      zh: ["非常不同意", "不同意", "中立", "同意", "非常同意"],
-      fr: ["Tout à fait en désaccord", "En désaccord", "Neutre", "D'accord", "Tout à fait d'accord"],
-      es: ["Totalmente en desacuerdo", "En desacuerdo", "Neutral", "De acuerdo", "Totalmente de acuerdo"],
-    },
-  };
-
-const uiText = {
-  en: {
-    surveyTitle: "Global Mindedness Survey",
-    yourResults: "Your Results",
-    overallScore: "Overall Score",
-    resultsSummaryTitle: "Results",
-    resultsSummaryEmphasis: "Summary",
-    summarySubtitle: "Global Mindedness Survey results overview",
-    categoryScores: "Category Scores:",
-    facetHighlightsTitle: "Facet Highlights",
-    downloadPdf: "Download PDF",
-    takeSurveyAgain: "Take Survey Again",
-    question: "Question",
-    of: "of",
-    back: "Back",
-    nameLabel: "Your Name",
-    namePlaceholder: "Enter your name",
-    participantLabel: "Participant",
-    reportDateLabel: "Report date",
-    pdfFooterNote:
-      "Scores are based on the Global Mindedness Scale (GMS).",
-    interpretations: {
-      low: "Low global-mindedness",
-      moderate: "Moderate global-mindedness",
-      high: "High global-mindedness",
-    },
-  },
-  zh: {
-    surveyTitle: "全球意识调查",
-    yourResults: "你的结果",
-    overallScore: "总分",
-    resultsSummaryTitle: "结果",
-    resultsSummaryEmphasis: "摘要",
-    summarySubtitle: "全球意识调查结果概览",
-    categoryScores: "分类得分：",
-    facetHighlightsTitle: "维度亮点",
-    downloadPdf: "下载 PDF",
-    takeSurveyAgain: "再次参与调查",
-    question: "问题",
-    of: "/",
-    back: "上一题",
-    nameLabel: "你的名字",
-    namePlaceholder: "输入你的名字",
-    participantLabel: "参与者",
-    reportDateLabel: "报告日期",
-    pdfFooterNote: "分数基于全球意识量表（GMS）。",
-    interpretations: {
-      low: "全球意识低",
-      moderate: "全球意识中等",
-      high: "全球意识高",
-    },
-  },
-  fr: {
-    surveyTitle: "Sondage sur l'ouverture au monde",
-    yourResults: "Vos résultats",
-    overallScore: "Score total",
-    resultsSummaryTitle: "Résumé",
-    resultsSummaryEmphasis: "des résultats",
-    summarySubtitle: "Aperçu des résultats du sondage",
-    categoryScores: "Scores par catégorie :",
-    facetHighlightsTitle: "Points forts par dimension",
-    downloadPdf: "Télécharger le PDF",
-    takeSurveyAgain: "Reprendre le sondage",
-    question: "Question",
-    of: "sur",
-    back: "Retour",
-    nameLabel: "Votre nom",
-    namePlaceholder: "Entrez votre nom",
-    participantLabel: "Participant",
-    reportDateLabel: "Date du rapport",
-    pdfFooterNote:
-      "Les scores sont basés sur l’échelle de global-mindedness (GMS).",
-    interpretations: {
-      low: "Faible ouverture mondiale",
-      moderate: "Ouverture mondiale modérée",
-      high: "Forte ouverture mondiale",
-    },
-  },
-  es: {
-    surveyTitle: "Encuesta de Mentalidad Global",
-    yourResults: "Tus resultados",
-    overallScore: "Puntuación total",
-    resultsSummaryTitle: "Resumen",
-    resultsSummaryEmphasis: "de resultados",
-    summarySubtitle: "Resumen de resultados de la encuesta",
-    categoryScores: "Puntuaciones por categoría:",
-    facetHighlightsTitle: "Aspectos destacados",
-    downloadPdf: "Descargar PDF",
-    takeSurveyAgain: "Realizar la encuesta de nuevo",
-    question: "Pregunta",
-    of: "de",
-    back: "Atrás",
-    nameLabel: "Tu nombre",
-    namePlaceholder: "Ingresa tu nombre",
-    participantLabel: "Participante",
-    reportDateLabel: "Fecha del informe",
-    pdfFooterNote:
-      "Las puntuaciones se basan en la escala Global Mindedness (GMS).",
-    interpretations: {
-      low: "Baja mentalidad global",
-      moderate: "Mentalidad global moderada",
-      high: "Alta mentalidad global",
-    },
-  },
-};
-  
-  export default function GlobalMindednessSurvey() {
-    const [language, setLanguage] = useState('en');
+  export default function GlobalMindednessSurvey({ language, onLanguageChange }) {
     const questionCount = fullSurveyData.questions.en.length;
     const [responses, setResponses] = useState(Array(questionCount).fill(null));
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [results, setResults] = useState(null);
     const [participantName, setParticipantName] = useState('');
     const progress = (currentQuestion + 1) / questionCount;
-
-    useEffect(() => {
-      document.documentElement.lang = language;
-    }, [language]);
 
     const handleAnswer = (value) => {
       const updated = [...responses];
@@ -366,6 +58,10 @@ const uiText = {
     const downloadPdf = () => {
       if (!results) return;
 
+      // jsPDF's built-in fonts cannot render CJK glyphs, so the PDF falls
+      // back to English until an embedded Chinese font is added.
+      const pdfLang = language === 'zh' ? 'en' : language;
+
       const doc = new jsPDF({ unit: 'pt', format: 'a4', orientation: 'landscape' });
       const pageWidth = doc.internal.pageSize.getWidth();
       const pageHeight = doc.internal.pageSize.getHeight();
@@ -389,29 +85,29 @@ const uiText = {
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(30);
       doc.setTextColor(...palette.primary);
-      const titleText = `${uiText[language].resultsSummaryTitle} `;
+      const titleText = `${uiText[pdfLang].resultsSummaryTitle} `;
       doc.text(titleText, margin, 62);
       const titleWidth = doc.getTextWidth(titleText);
       doc.setTextColor(...palette.accent);
-      doc.text(uiText[language].resultsSummaryEmphasis, margin + titleWidth, 62);
+      doc.text(uiText[pdfLang].resultsSummaryEmphasis, margin + titleWidth, 62);
 
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(11);
       doc.setTextColor(...palette.muted);
-      doc.text(uiText[language].summarySubtitle, margin, 84);
+      doc.text(uiText[pdfLang].summarySubtitle, margin, 84);
 
       doc.setFontSize(10);
       const rightX = pageWidth - margin;
       if (trimmedName) {
         doc.text(
-          `${uiText[language].participantLabel}: ${trimmedName}`,
+          `${uiText[pdfLang].participantLabel}: ${trimmedName}`,
           rightX,
           50,
           { align: 'right' }
         );
       }
       doc.text(
-        `${uiText[language].reportDateLabel}: ${new Date().toLocaleDateString()}`,
+        `${uiText[pdfLang].reportDateLabel}: ${new Date().toLocaleDateString()}`,
         rightX,
         68,
         { align: 'right' }
@@ -433,7 +129,7 @@ const uiText = {
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(16);
       doc.setTextColor(...palette.primary);
-      doc.text(uiText[language].overallScore, margin + 24, y + 34);
+      doc.text(uiText[pdfLang].overallScore, margin + 24, y + 34);
 
       doc.setFontSize(30);
       doc.text(`${results.overallScore}`, margin + 24, y + 74);
@@ -441,7 +137,7 @@ const uiText = {
       doc.setFontSize(12);
       doc.setTextColor(...palette.muted);
       doc.text(
-        `/ ${results.overallMax}  •  ${uiText[language].interpretations[results.interpretationKey]}`,
+        `/ ${results.overallMax}  •  ${uiText[pdfLang].interpretations[results.interpretationKey]}`,
         margin + 90,
         y + 74
       );
@@ -459,34 +155,20 @@ const uiText = {
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
       doc.setTextColor(...palette.primary);
-      doc.text(uiText[language].facetHighlightsTitle, margin, y);
+      doc.text(uiText[pdfLang].facetHighlightsTitle, margin, y);
 
       const cardY = y + 14;
-      const gap = 14;
-      const cardWidth = (contentWidth - gap * 3) / 4;
-      const cardHeight = 190;
-      const categoryOrder = [
-        'Responsibility',
-        'CulturalPluralism',
-        'Efficacy',
-        'Interconnectedness',
-      ];
+      const gap = 12;
+      const categoryOrder = Object.keys(fullSurveyData.categories);
+      const cardWidth = (contentWidth - gap * (categoryOrder.length - 1)) / categoryOrder.length;
+      const cardHeight = 200;
       const categoryColors = [
         [59, 130, 246],
         [245, 158, 11],
         [16, 185, 129],
+        [236, 72, 153],
         [139, 92, 246],
       ];
-      const facetHighlights = {
-        Responsibility:
-          'Reflects personal obligation to respond to global inequities, human rights, and environmental concerns with care, empathy, and follow-through.',
-        CulturalPluralism:
-          'Measures curiosity about diverse cultures, comfort with difference, and the belief that cross-cultural exchange enriches communities.',
-        Efficacy:
-          'Captures confidence that individual actions, advocacy, and daily choices can meaningfully influence global outcomes over time.',
-        Interconnectedness:
-          'Indicates awareness of how societies and ecosystems are linked through trade, media, migration, and shared environmental impacts.',
-      };
 
       categoryOrder.forEach((category, index) => {
         const score = results.categoryScores[category];
@@ -494,51 +176,56 @@ const uiText = {
         const percentage = score / max;
         const color = categoryColors[index];
         const x = margin + index * (cardWidth + gap);
+        const band = getFacetBand(score, fullSurveyData.categories[category].length);
 
         doc.setFillColor(255, 255, 255);
         doc.setDrawColor(...palette.border);
         doc.roundedRect(x, cardY, cardWidth, cardHeight, 16, 16, 'FD');
 
         const circleX = x + cardWidth / 2;
-        const circleY = cardY + 50;
+        const circleY = cardY + 42;
         doc.setFillColor(248, 250, 252);
-        doc.circle(circleX, circleY, 28, 'F');
+        doc.circle(circleX, circleY, 24, 'F');
         doc.setDrawColor(color[0], color[1], color[2]);
-        doc.setLineWidth(4);
-        doc.circle(circleX, circleY, 28, 'S');
+        doc.setLineWidth(3.5);
+        doc.circle(circleX, circleY, 24, 'S');
         doc.setFont('helvetica', 'bold');
-        doc.setFontSize(13);
+        doc.setFontSize(12);
         doc.setTextColor(color[0], color[1], color[2]);
-        doc.text(`${Math.round(percentage * 100)}%`, circleX, circleY + 5, {
+        doc.text(`${Math.round(percentage * 100)}%`, circleX, circleY + 4, {
           align: 'center',
         });
 
         doc.setFont('helvetica', 'bold');
-        doc.setFontSize(11);
+        doc.setFontSize(10);
         doc.setTextColor(...palette.primary);
         doc.text(
-          fullSurveyData.categoryLabels[language][category],
-          x + 12,
-          cardY + 108,
-          { maxWidth: cardWidth - 24 }
+          fullSurveyData.categoryLabels[pdfLang][category],
+          x + 10,
+          cardY + 86,
+          { maxWidth: cardWidth - 20 }
         );
 
         doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
-        doc.setTextColor(...palette.muted);
-        doc.text(`${score} / ${max}`, x + 12, cardY + 130);
-
         doc.setFontSize(9);
-        const highlightLines = doc.splitTextToSize(
-          facetHighlights[category],
-          cardWidth - 24
+        doc.setTextColor(...palette.muted);
+        doc.text(
+          `${score} / ${max}  •  ${uiText[pdfLang].bandNames[band]}`,
+          x + 10,
+          cardY + 116
         );
-        doc.text(highlightLines, x + 12, cardY + 148);
+
+        doc.setFontSize(8);
+        const bandLines = doc.splitTextToSize(
+          facetEducation[pdfLang][category].bands[band],
+          cardWidth - 20
+        );
+        doc.text(bandLines.slice(0, 7), x + 10, cardY + 132);
       });
 
       doc.setFontSize(9);
       doc.setTextColor(...palette.muted);
-      doc.text(uiText[language].pdfFooterNote, margin, pageHeight - 24);
+      doc.text(uiText[pdfLang].pdfFooterNote, margin, pageHeight - 24);
 
       const sanitizedName = trimmedName.replace(/[^\p{L}\p{N}_-]+/gu, '_').replace(/^_+|_+$/g, '');
       const safeName = sanitizedName || 'GMS_results';
@@ -553,7 +240,7 @@ const uiText = {
             className="border p-2 rounded"
             value={language}
             onChange={(e) => {
-              setLanguage(e.target.value);
+              onLanguageChange(e.target.value);
             }}
           >
             <option value="en">English</option>
@@ -579,21 +266,38 @@ const uiText = {
             <div className="mt-6">
               <h3 className="text-xl font-semibold mb-4 text-gray-700">{uiText[language].categoryScores}</h3>
               <ul className="space-y-6">
-                {Object.entries(results.categoryScores).filter(([key]) => !key.includes("Max")).map(([category, score]) => {
+                {Object.keys(fullSurveyData.categories).map((category) => {
+                  const score = results.categoryScores[category];
                   const max = results.categoryScores[`${category}Max`];
                   const percentage = (score / max) * 100;
+                  const band = getFacetBand(score, fullSurveyData.categories[category].length);
+                  const education = facetEducation[language][category];
                   return (
-                    <li key={category}>
+                    <li key={category} className="border rounded-2xl p-4 bg-gray-50">
                       <p className="mb-1 text-gray-700">
                         <strong>{fullSurveyData.categoryLabels[language][category]}:</strong> {score} / {max}
+                        <span className="ml-2 text-sm font-semibold text-blue-700">
+                          {uiText[language].bandNames[band]}
+                        </span>
                       </p>
                       <p className="mb-2 text-sm text-gray-500 italic">{fullSurveyData.categoryDescriptions[language][category]}</p>
-                      <div className="w-full bg-gray-200 rounded-full h-4">
+                      <div className="w-full bg-gray-200 rounded-full h-4 mb-3">
                         <div
                           className="bg-green-500 h-4 rounded-full transition-all"
                           style={{ width: `${percentage}%` }}
                         ></div>
                       </div>
+                      <p className="mb-2 text-sm text-gray-700">{education.bands[band]}</p>
+                      <details className="text-sm text-gray-600">
+                        <summary className="cursor-pointer font-medium text-gray-700">
+                          {uiText[language].growTitle}
+                        </summary>
+                        <ul className="list-disc ml-5 mt-2 space-y-1">
+                          {education.tips.map((tip, tipIdx) => (
+                            <li key={tipIdx}>{tip}</li>
+                          ))}
+                        </ul>
+                      </details>
                     </li>
                   );
                 })}
