@@ -1,6 +1,15 @@
 import React, { useState } from "react";
 import { jsPDF } from "jspdf";
 import { fullSurveyData, uiText, facetEducation, getFacetBand } from "./surveyData";
+import logo from "./assets/logo.png";
+
+const loadImage = (src) =>
+  new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
 
   export default function GlobalMindednessSurvey({ language, onLanguageChange }) {
     const questionCount = fullSurveyData.questions.en.length;
@@ -55,12 +64,20 @@ import { fullSurveyData, uiText, facetEducation, getFacetBand } from "./surveyDa
       setResults({ overallScore, overallMax, interpretationKey, categoryScores });
     };
 
-    const downloadPdf = () => {
+    const downloadPdf = async () => {
       if (!results) return;
 
       // jsPDF's built-in fonts cannot render CJK glyphs, so the PDF falls
       // back to English until an embedded Chinese font is added.
       const pdfLang = language === 'zh' ? 'en' : language;
+
+      // The PDF is still generated if the logo fails to load.
+      let logoImage = null;
+      try {
+        logoImage = await loadImage(logo);
+      } catch {
+        logoImage = null;
+      }
 
       const doc = new jsPDF({ unit: 'pt', format: 'a4', orientation: 'landscape' });
       const pageWidth = doc.internal.pageSize.getWidth();
@@ -82,19 +99,26 @@ import { fullSurveyData, uiText, facetEducation, getFacetBand } from "./surveyDa
       doc.setFillColor(...palette.light);
       doc.rect(0, 0, pageWidth, headerHeight, 'F');
 
+      let textX = margin;
+      if (logoImage) {
+        const logoSize = 62;
+        doc.addImage(logoImage, 'PNG', margin, (headerHeight - logoSize) / 2, logoSize, logoSize);
+        textX = margin + logoSize + 16;
+      }
+
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(30);
       doc.setTextColor(...palette.primary);
       const titleText = `${uiText[pdfLang].resultsSummaryTitle} `;
-      doc.text(titleText, margin, 62);
+      doc.text(titleText, textX, 62);
       const titleWidth = doc.getTextWidth(titleText);
       doc.setTextColor(...palette.accent);
-      doc.text(uiText[pdfLang].resultsSummaryEmphasis, margin + titleWidth, 62);
+      doc.text(uiText[pdfLang].resultsSummaryEmphasis, textX + titleWidth, 62);
 
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(11);
       doc.setTextColor(...palette.muted);
-      doc.text(uiText[pdfLang].summarySubtitle, margin, 84);
+      doc.text(uiText[pdfLang].summarySubtitle, textX, 84);
 
       doc.setFontSize(10);
       const rightX = pageWidth - margin;
