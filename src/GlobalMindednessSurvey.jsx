@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { jsPDF } from "jspdf";
 
 const fullSurveyData = {
@@ -213,6 +213,7 @@ const uiText = {
     takeSurveyAgain: "Take Survey Again",
     question: "Question",
     of: "of",
+    back: "Back",
     nameLabel: "Your Name",
     namePlaceholder: "Enter your name",
     participantLabel: "Participant",
@@ -238,6 +239,7 @@ const uiText = {
     takeSurveyAgain: "再次参与调查",
     question: "问题",
     of: "/",
+    back: "上一题",
     nameLabel: "你的名字",
     namePlaceholder: "输入你的名字",
     participantLabel: "参与者",
@@ -262,6 +264,7 @@ const uiText = {
     takeSurveyAgain: "Reprendre le sondage",
     question: "Question",
     of: "sur",
+    back: "Retour",
     nameLabel: "Votre nom",
     namePlaceholder: "Entrez votre nom",
     participantLabel: "Participant",
@@ -287,6 +290,7 @@ const uiText = {
     takeSurveyAgain: "Realizar la encuesta de nuevo",
     question: "Pregunta",
     of: "de",
+    back: "Atrás",
     nameLabel: "Tu nombre",
     namePlaceholder: "Ingresa tu nombre",
     participantLabel: "Participante",
@@ -309,16 +313,26 @@ const uiText = {
     const [results, setResults] = useState(null);
     const [participantName, setParticipantName] = useState('');
     const progress = (currentQuestion + 1) / questionCount;
-  
+
+    useEffect(() => {
+      document.documentElement.lang = language;
+    }, [language]);
+
     const handleAnswer = (value) => {
       const updated = [...responses];
-      updated[currentQuestion] = parseInt(value);
+      updated[currentQuestion] = value;
       setResponses(updated);
-  
+
       if (currentQuestion < questionCount - 1) {
         setCurrentQuestion(currentQuestion + 1);
       } else {
         calculateResults(updated);
+      }
+    };
+
+    const handleBack = () => {
+      if (currentQuestion > 0) {
+        setCurrentQuestion(currentQuestion - 1);
       }
     };
   
@@ -345,9 +359,8 @@ const uiText = {
           : overallScore <= 104
           ? 'moderate'
           : 'high';
-      const interpretation = uiText[language].interpretations[interpretationKey];
 
-      setResults({ overallScore, overallMax, interpretation, categoryScores });
+      setResults({ overallScore, overallMax, interpretationKey, categoryScores });
     };
 
     const downloadPdf = () => {
@@ -428,7 +441,7 @@ const uiText = {
       doc.setFontSize(12);
       doc.setTextColor(...palette.muted);
       doc.text(
-        `/ ${results.overallMax}  •  ${results.interpretation}`,
+        `/ ${results.overallMax}  •  ${uiText[language].interpretations[results.interpretationKey]}`,
         margin + 90,
         y + 74
       );
@@ -527,9 +540,8 @@ const uiText = {
       doc.setTextColor(...palette.muted);
       doc.text(uiText[language].pdfFooterNote, margin, pageHeight - 24);
 
-      const safeName = trimmedName
-        ? trimmedName.replace(/\s+/g, '_')
-        : 'GMS_results';
+      const sanitizedName = trimmedName.replace(/[^\p{L}\p{N}_-]+/gu, '_').replace(/^_+|_+$/g, '');
+      const safeName = sanitizedName || 'GMS_results';
       doc.save(`${safeName}_GMS_results.pdf`);
     };
   
@@ -555,7 +567,7 @@ const uiText = {
           <div>
             <h2 className="text-2xl font-semibold mb-4 text-gray-700">{uiText[language].yourResults}</h2>
             <p className="text-lg mb-4 text-gray-600">
-              {uiText[language].overallScore}: <strong>{results.overallScore} / {results.overallMax}</strong> ({results.interpretation})
+              {uiText[language].overallScore}: <strong>{results.overallScore} / {results.overallMax}</strong> ({uiText[language].interpretations[results.interpretationKey]})
             </p>
             <div className="w-full bg-gray-200 rounded-full h-5 mb-8">
               <div
@@ -633,16 +645,31 @@ const uiText = {
               </div>
               <p className="mb-8 text-xl text-gray-800 text-center">{fullSurveyData.questions[language][currentQuestion]}</p>
               <div className="flex flex-col gap-4">
-                {fullSurveyData.scaleDescriptors[language].map((desc, idx) => (
-                  <button
-                    key={idx + 1}
-                    className="px-6 py-4 text-lg border rounded-2xl hover:bg-blue-100 bg-white shadow text-gray-700 font-medium transition-all w-full text-left"
-                    onClick={() => handleAnswer(idx + 1)}
-                  >
-                    <strong>{idx + 1}:</strong> {desc}
-                  </button>
-                ))}
+                {fullSurveyData.scaleDescriptors[language].map((desc, idx) => {
+                  const selected = responses[currentQuestion] === idx + 1;
+                  return (
+                    <button
+                      key={idx + 1}
+                      className={`px-6 py-4 text-lg border rounded-2xl hover:bg-blue-100 shadow font-medium transition-all w-full text-left ${
+                        selected
+                          ? 'bg-blue-50 border-blue-600 ring-2 ring-blue-500 text-blue-800'
+                          : 'bg-white text-gray-700'
+                      }`}
+                      onClick={() => handleAnswer(idx + 1)}
+                    >
+                      <strong>{idx + 1}:</strong> {desc}
+                    </button>
+                  );
+                })}
               </div>
+              {currentQuestion > 0 && (
+                <button
+                  className="mt-6 px-6 py-2 text-gray-600 border border-gray-300 rounded-2xl hover:bg-gray-100 transition-all"
+                  onClick={handleBack}
+                >
+                  &larr; {uiText[language].back}
+                </button>
+              )}
             </div>
           </div>
         )}
