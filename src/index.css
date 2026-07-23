@@ -1,4 +1,9 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply min-h-screen bg-gradient-to-b from-slate-100 via-blue-50 to-slate-100 pb-16;
+  }
+}
