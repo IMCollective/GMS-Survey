@@ -1,8 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { jsPDF } from "jspdf";
 import { fullSurveyData, uiText, facetEducation, getFacetBand } from "./surveyData";
 import Header from "./Header";
+import RadarChart from "./RadarChart";
 import logo from "./assets/logo.png";
+
+const useCountUp = (target, duration = 900) => {
+  const [value, setValue] = useState(target);
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setValue(target);
+      return undefined;
+    }
+    let raf;
+    const start = performance.now();
+    const tick = (now) => {
+      const t = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      setValue(Math.round(target * eased));
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [target, duration]);
+  return value;
+};
 
 const loadImage = (src) =>
   new Promise((resolve, reject) => {
@@ -20,6 +42,7 @@ const loadImage = (src) =>
     const [participantName, setParticipantName] = useState('');
     const [copied, setCopied] = useState(false);
     const progress = (currentQuestion + 1) / questionCount;
+    const displayScore = useCountUp(results ? results.overallScore : 0);
 
     const shareUrl = `${window.location.origin}${window.location.pathname}`;
 
@@ -177,7 +200,7 @@ const loadImage = (src) =>
       };
 
       let y = headerHeight + 20;
-      const overallCardHeight = 120;
+      const overallCardHeight = 170;
       doc.setFillColor(255, 255, 255);
       doc.setDrawColor(...palette.border);
       doc.roundedRect(margin, y, contentWidth, overallCardHeight, 16, 16, 'FD');
@@ -185,27 +208,76 @@ const loadImage = (src) =>
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(16);
       doc.setTextColor(...palette.primary);
-      doc.text(uiText[pdfLang].overallScore, margin + 24, y + 34);
+      doc.text(uiText[pdfLang].overallScore, margin + 24, y + 44);
 
       doc.setFontSize(30);
-      doc.text(`${results.overallScore}`, margin + 24, y + 74);
+      doc.text(`${results.overallScore}`, margin + 24, y + 84);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(12);
       doc.setTextColor(...palette.muted);
       doc.text(
         `/ ${results.overallMax}  •  ${uiText[pdfLang].interpretations[results.interpretationKey]}`,
         margin + 90,
-        y + 74
+        y + 84
       );
 
+      const radarZoneWidth = 280;
       drawProgressBar(
         margin + 24,
-        y + 88,
-        contentWidth - 48,
+        y + 108,
+        contentWidth - 48 - radarZoneWidth,
         12,
         overallPercent,
         palette.accent
       );
+
+      // Facet radar on the right of the overall card.
+      const drawPolygon = (pts, style) => {
+        const segments = [];
+        for (let i = 1; i < pts.length; i += 1) {
+          segments.push([pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]]);
+        }
+        doc.lines(segments, pts[0][0], pts[0][1], [1, 1], style, true);
+      };
+      const radarCats = Object.keys(fullSurveyData.categories);
+      const radarCx = margin + contentWidth - radarZoneWidth / 2 - 10;
+      const radarCy = y + overallCardHeight / 2;
+      const radarR = 48;
+      const radarPoint = (i, fraction) => {
+        const angle = -Math.PI / 2 + (i * 2 * Math.PI) / radarCats.length;
+        return [radarCx + Math.cos(angle) * radarR * fraction, radarCy + Math.sin(angle) * radarR * fraction];
+      };
+      doc.setDrawColor(...palette.border);
+      doc.setLineWidth(0.8);
+      [0.25, 0.5, 0.75, 1].forEach((fraction) => {
+        drawPolygon(radarCats.map((_, i) => radarPoint(i, fraction)), 'S');
+      });
+      radarCats.forEach((_, i) => {
+        const [px, py] = radarPoint(i, 1);
+        doc.line(radarCx, radarCy, px, py);
+      });
+      doc.setFillColor(214, 229, 236);
+      doc.setDrawColor(46, 113, 145);
+      doc.setLineWidth(1.5);
+      drawPolygon(
+        radarCats.map((category, i) =>
+          radarPoint(i, results.categoryScores[category] / results.categoryScores[`${category}Max`])
+        ),
+        'FD'
+      );
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7);
+      doc.setTextColor(71, 85, 105);
+      radarCats.forEach((category, i) => {
+        const angle = -Math.PI / 2 + (i * 2 * Math.PI) / radarCats.length;
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
+        const lx = radarCx + cos * (radarR + 8);
+        const ly = radarCy + sin * (radarR + 8) + (sin > 0.3 ? 8 : sin < -0.3 ? -4 : 2);
+        const align = Math.abs(cos) < 0.3 ? 'center' : cos > 0 ? 'left' : 'right';
+        doc.text(fullSurveyData.categoryLabels[pdfLang][category], lx, ly, { align });
+      });
+      doc.setLineWidth(1);
 
       y += overallCardHeight + 24;
       doc.setFont('helvetica', 'bold');
@@ -218,12 +290,14 @@ const loadImage = (src) =>
       const categoryOrder = Object.keys(fullSurveyData.categories);
       const cardWidth = (contentWidth - gap * (categoryOrder.length - 1)) / categoryOrder.length;
       const cardHeight = 200;
+      // Categorical order validated for color-vision-deficiency separation:
+      // violet sits between emerald and pink.
       const categoryColors = [
         [59, 130, 246],
         [245, 158, 11],
         [16, 185, 129],
-        [236, 72, 153],
         [139, 92, 246],
+        [236, 72, 153],
       ];
 
       categoryOrder.forEach((category, index) => {
@@ -300,15 +374,23 @@ const loadImage = (src) =>
           <div>
             <h2 className="text-2xl font-semibold mb-4 text-gray-700">{uiText[language].yourResults}</h2>
             <p className="text-lg mb-4 text-gray-600">
-              {uiText[language].overallScore}: <strong>{results.overallScore} / {results.overallMax}</strong> ({uiText[language].interpretations[results.interpretationKey]})
+              {uiText[language].overallScore}: <strong>{displayScore} / {results.overallMax}</strong> ({uiText[language].interpretations[results.interpretationKey]})
             </p>
             <div className="w-full bg-gray-200 rounded-full h-5 mb-8">
               <div
-                className="bg-blue-600 h-5 rounded-full transition-all"
-                style={{ width: `${(results.overallScore / results.overallMax) * 100}%` }}
+                className="bg-brand-gold h-5 rounded-full transition-all duration-500 ease-out"
+                style={{ width: `${(displayScore / results.overallMax) * 100}%` }}
               ></div>
             </div>
-  
+
+            <RadarChart
+              title={uiText[language].categoryScores}
+              data={Object.keys(fullSurveyData.categories).map((category) => ({
+                label: fullSurveyData.categoryLabels[language][category],
+                value: results.categoryScores[category] / results.categoryScores[`${category}Max`],
+              }))}
+            />
+
             <div className="mt-6">
               <h3 className="text-xl font-semibold mb-4 text-gray-700">{uiText[language].categoryScores}</h3>
               <ul className="space-y-6">
@@ -322,14 +404,14 @@ const loadImage = (src) =>
                     <li key={category} className="border rounded-2xl p-4 bg-gray-50">
                       <p className="mb-1 text-gray-700">
                         <strong>{fullSurveyData.categoryLabels[language][category]}:</strong> {score} / {max}
-                        <span className="ml-2 text-sm font-semibold text-blue-700">
+                        <span className="ml-2 text-sm font-semibold text-brand-ocean">
                           {uiText[language].bandNames[band]}
                         </span>
                       </p>
                       <p className="mb-2 text-sm text-gray-500 italic">{fullSurveyData.categoryDescriptions[language][category]}</p>
                       <div className="w-full bg-gray-200 rounded-full h-4 mb-3">
                         <div
-                          className="bg-green-500 h-4 rounded-full transition-all"
+                          className="bg-brand-ocean h-4 rounded-full transition-all duration-500 ease-out"
                           style={{ width: `${percentage}%` }}
                         ></div>
                       </div>
@@ -364,7 +446,7 @@ const loadImage = (src) =>
               />
             </div>
             <button
-              className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white text-xl py-3 rounded-2xl shadow-lg"
+              className="mt-6 w-full bg-brand-leaf hover:bg-brand-leafdark text-white text-xl py-3 rounded-2xl shadow-lg"
               onClick={downloadPdf}
             >
               {uiText[language].downloadPdf}
@@ -375,7 +457,7 @@ const loadImage = (src) =>
               <div className="flex flex-wrap gap-2">
                 {typeof navigator !== 'undefined' && navigator.share && (
                   <button
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow"
+                    className="px-4 py-2 bg-brand-ocean hover:bg-brand-oceandark text-white rounded-full shadow"
                     onClick={handleNativeShare}
                   >
                     {uiText[language].shareButton}
@@ -423,7 +505,7 @@ const loadImage = (src) =>
             </div>
 
             <button
-              className="mt-10 w-full bg-blue-600 hover:bg-blue-700 text-white text-xl py-3 rounded-2xl shadow-lg"
+              className="mt-10 w-full bg-brand-ocean hover:bg-brand-oceandark text-white text-xl py-3 rounded-2xl shadow-lg"
               onClick={() => {
                 setResults(null);
                 setResponses(Array(questionCount).fill(null));
@@ -435,13 +517,13 @@ const loadImage = (src) =>
           </div>
         ) : (
           <div className="space-y-8">
-            <div className="border rounded-2xl p-8 shadow-lg bg-gray-50">
+            <div key={currentQuestion} className="border rounded-2xl p-8 shadow-lg bg-gray-50 animate-fade-slide motion-reduce:animate-none">
               <p className="mb-6 text-lg font-medium text-gray-700 text-center">
                 {uiText[language].question} {currentQuestion + 1} {uiText[language].of} {questionCount}
               </p>
               <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
                 <div
-                  className="bg-blue-600 h-2 rounded-full transition-all"
+                  className="bg-brand-ocean h-2 rounded-full transition-all duration-500 ease-out"
                   style={{ width: `${progress * 100}%` }}
                 ></div>
               </div>
@@ -452,9 +534,9 @@ const loadImage = (src) =>
                   return (
                     <button
                       key={idx + 1}
-                      className={`px-6 py-4 text-lg border rounded-2xl hover:bg-blue-100 shadow font-medium transition-all w-full text-left ${
+                      className={`px-6 py-4 text-lg border rounded-2xl hover:bg-brand-mist hover:shadow-md hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 shadow font-medium transition-all w-full text-left ${
                         selected
-                          ? 'bg-blue-50 border-blue-600 ring-2 ring-blue-500 text-blue-800'
+                          ? 'bg-brand-mist border-brand-ocean ring-2 ring-brand-ocean text-brand-oceandark'
                           : 'bg-white text-gray-700'
                       }`}
                       onClick={() => handleAnswer(idx + 1)}

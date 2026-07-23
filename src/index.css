@@ -4,6 +4,9 @@
 
 @layer base {
   body {
-    @apply min-h-screen bg-gradient-to-b from-slate-100 via-blue-50 to-slate-100 pb-16;
+    @apply min-h-screen bg-gradient-to-b from-slate-100 via-blue-50 to-slate-100 pb-16 font-sans text-brand-ink;
+  }
+  h1, h2, h3 {
+    @apply font-display;
   }
 }
