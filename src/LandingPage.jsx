@@ -41,7 +41,7 @@ export default function LandingPage({ language, onLanguageChange, onStart }) {
       </details>
 
       <button
-        className="bg-blue-600 hover:bg-blue-700 text-white text-xl py-3 px-8 rounded-2xl shadow-lg"
+        className="bg-brand-ocean hover:bg-brand-oceandark text-white text-xl py-3 px-8 rounded-2xl shadow-lg"
         onClick={onStart}
       >
         {text.startButton}
