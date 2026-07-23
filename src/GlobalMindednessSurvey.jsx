@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { jsPDF } from "jspdf";
 import { fullSurveyData, uiText, facetEducation, getFacetBand } from "./surveyData";
+import Header from "./Header";
 import logo from "./assets/logo.png";
 
 const loadImage = (src) =>
@@ -289,22 +290,12 @@ const loadImage = (src) =>
   
     return (
       <div className="p-6 max-w-2xl mx-auto bg-white rounded-2xl shadow-xl mt-10 border border-gray-200">
-        <h1 className="text-4xl font-bold mb-6 text-center text-gray-800">{uiText[language].surveyTitle}</h1>
-        <div className="mb-6 text-center">
-          <select
-            className="border p-2 rounded"
-            value={language}
-            onChange={(e) => {
-              onLanguageChange(e.target.value);
-            }}
-          >
-            <option value="en">English</option>
-            <option value="zh">中文</option>
-            <option value="fr">Français</option>
-            <option value="es">Español</option>
-          </select>
-        </div>
-  
+        <Header
+          title={uiText[language].surveyTitle}
+          language={language}
+          onLanguageChange={onLanguageChange}
+        />
+
         {results ? (
           <div>
             <h2 className="text-2xl font-semibold mb-4 text-gray-700">{uiText[language].yourResults}</h2>
