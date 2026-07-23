@@ -235,6 +235,12 @@ export const uiText = {
     },
     bandNames: { low: "Low", moderate: "Moderate", high: "High" },
     growTitle: "Ways to develop this",
+    shareTitle: "Share your results",
+    shareMessage:
+      "I scored {score}/{max} ({interpretation}) on the Global Mindedness Survey. Try it yourself:",
+    shareButton: "Share…",
+    copyButton: "Copy link",
+    copiedNotice: "Copied!",
     welcomeTitle: "Welcome to the Global Mindedness Survey",
     welcomeBody:
       "This short questionnaire measures your attitudes about global citizenship and cultural understanding.",
@@ -269,6 +275,11 @@ export const uiText = {
     },
     bandNames: { low: "低", moderate: "中等", high: "高" },
     growTitle: "提升建议",
+    shareTitle: "分享你的结果",
+    shareMessage: "我在全球意识调查中得了 {score}/{max}（{interpretation}）。你也来试试吧：",
+    shareButton: "分享…",
+    copyButton: "复制链接",
+    copiedNotice: "已复制！",
     welcomeTitle: "欢迎参加全球意识调查",
     welcomeBody: "本问卷测量你对全球公民意识与文化理解的态度。",
     startButton: "开始调查",
@@ -302,6 +313,12 @@ export const uiText = {
     },
     bandNames: { low: "Faible", moderate: "Modéré", high: "Élevé" },
     growTitle: "Pistes de développement",
+    shareTitle: "Partagez vos résultats",
+    shareMessage:
+      "J'ai obtenu {score}/{max} ({interpretation}) au sondage sur l'ouverture au monde. Essayez-le vous aussi :",
+    shareButton: "Partager…",
+    copyButton: "Copier le lien",
+    copiedNotice: "Copié !",
     welcomeTitle: "Bienvenue au sondage sur l'ouverture au monde",
     welcomeBody:
       "Ce court questionnaire mesure vos attitudes concernant la citoyenneté mondiale et la compréhension culturelle.",
@@ -337,6 +354,12 @@ export const uiText = {
     },
     bandNames: { low: "Bajo", moderate: "Moderado", high: "Alto" },
     growTitle: "Cómo desarrollarlo",
+    shareTitle: "Comparte tus resultados",
+    shareMessage:
+      "Obtuve {score}/{max} ({interpretation}) en la Encuesta de Mentalidad Global. Pruébala tú también:",
+    shareButton: "Compartir…",
+    copyButton: "Copiar enlace",
+    copiedNotice: "¡Copiado!",
     welcomeTitle: "Bienvenido a la Encuesta de Mentalidad Global",
     welcomeBody:
       "Este breve cuestionario mide tus actitudes sobre la ciudadanía global y la comprensión cultural.",

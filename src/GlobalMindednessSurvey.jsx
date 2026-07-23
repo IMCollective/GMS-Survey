@@ -17,7 +17,38 @@ const loadImage = (src) =>
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [results, setResults] = useState(null);
     const [participantName, setParticipantName] = useState('');
+    const [copied, setCopied] = useState(false);
     const progress = (currentQuestion + 1) / questionCount;
+
+    const shareUrl = `${window.location.origin}${window.location.pathname}`;
+
+    const buildShareMessage = () =>
+      uiText[language].shareMessage
+        .replace('{score}', results.overallScore)
+        .replace('{max}', results.overallMax)
+        .replace('{interpretation}', uiText[language].interpretations[results.interpretationKey]);
+
+    const handleNativeShare = async () => {
+      try {
+        await navigator.share({
+          title: uiText[language].surveyTitle,
+          text: buildShareMessage(),
+          url: shareUrl,
+        });
+      } catch {
+        // user dismissed the share sheet
+      }
+    };
+
+    const handleCopy = async () => {
+      try {
+        await navigator.clipboard.writeText(`${buildShareMessage()} ${shareUrl}`);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch {
+        // clipboard unavailable
+      }
+    };
 
     const handleAnswer = (value) => {
       const updated = [...responses];
@@ -347,6 +378,58 @@ const loadImage = (src) =>
             >
               {uiText[language].downloadPdf}
             </button>
+
+            <div className="mt-6 border rounded-2xl p-4 bg-gray-50">
+              <h3 className="font-semibold text-gray-700 mb-3">{uiText[language].shareTitle}</h3>
+              <div className="flex flex-wrap gap-2">
+                {typeof navigator !== 'undefined' && navigator.share && (
+                  <button
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow"
+                    onClick={handleNativeShare}
+                  >
+                    {uiText[language].shareButton}
+                  </button>
+                )}
+                <a
+                  className="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-full shadow"
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(buildShareMessage())}&url=${encodeURIComponent(shareUrl)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  X
+                </a>
+                <a
+                  className="px-4 py-2 bg-[#1877F2] hover:opacity-90 text-white rounded-full shadow"
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Facebook
+                </a>
+                <a
+                  className="px-4 py-2 bg-[#0A66C2] hover:opacity-90 text-white rounded-full shadow"
+                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  LinkedIn
+                </a>
+                <a
+                  className="px-4 py-2 bg-[#25D366] hover:opacity-90 text-white rounded-full shadow"
+                  href={`https://wa.me/?text=${encodeURIComponent(`${buildShareMessage()} ${shareUrl}`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  WhatsApp
+                </a>
+                <button
+                  className="px-4 py-2 border border-gray-300 text-gray-700 hover:bg-gray-100 rounded-full shadow"
+                  onClick={handleCopy}
+                >
+                  {copied ? uiText[language].copiedNotice : uiText[language].copyButton}
+                </button>
+              </div>
+            </div>
 
             <button
               className="mt-10 w-full bg-blue-600 hover:bg-blue-700 text-white text-xl py-3 rounded-2xl shadow-lg"
